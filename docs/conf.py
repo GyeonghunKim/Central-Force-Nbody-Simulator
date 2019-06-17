@@ -18,21 +18,22 @@
 
 
 # -- Project information -----------------------------------------------------
-
-project = 'Central Force N-body Simulator Toolbox in Python'
-copyright = '2019, Author'
-author = 'Author'
-
-# The short X.Y version
-version = ''
-# The full version, including alpha/beta/rc tags
-release = ''
-
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('../CFNS'))
+
+project = 'Central Force N-body Simulator in Python'
+copyright = '2019, Author'
+author = 'Author'
+
 autodoc_member_order = 'bysource'
+
+from CFNS import __version__ as VERSION
+# The short X.Y version
+version = VERSION
+# The full version, including alpha/beta/rc tags
+release = VERSION
 
 # -- General configuration ---------------------------------------------------
 
