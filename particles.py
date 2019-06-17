@@ -1,4 +1,4 @@
-import numpy as nump
+import numpy as np
 import matplotlib.pyplot as plt
 from data_types import location_series
 import unittest
@@ -14,23 +14,16 @@ class particle:
         :param float dt: 입자가 움직이는 궤적을 계산할 때 사용되는 시간 간격입니다. 
         :param int dim: 입자가 움직이는 공간의 차원입니다. 
         :param float mass: 입자의 질량입니다. 
-        :param float loc: 입자의 초기 위치입니다. 
-        :param float vel: 입자의 초기 속력입니다.
+        :param numpy array loc: 입자의 초기 위치입니다. 
+        :param numpy array vel: 입자의 초기 속력입니다.
         '''
         self.mass = mass #질량을 설정해줍니다.
         self.location = location_series((dt, dim, loc)) #초기 위치와 차원, 시간 간격을 기반으로 location series를 만들어 줍니다. 
         self.velocity = vel #초기 속도를 설정해줍니다.
 
 
-    # 입자에 대한 정보를 출력합니다. #질량, 초기 위치, 초기 속도를 출력합니다.
     def print_info(self):
-        ''' Constructor of the particle class
-        :param float dt: 입자가 움직이는 궤적을 계산할 때 사용되는 시간 간격입니다. 
-        :param int dim: 입자가 움직이는 공간의 차원입니다. 
-        :param float mass: 입자의 질량입니다. 
-        :param float loc: 입자의 초기 위치입니다. 
-        :param float vel: 입자의 초기 속력입니다.
-        '''
+        ''' 입자에 대한 정보를 출력합니다. #질량, 초기 위치, 초기 속도를 출력합니다.'''
         vec = self.location.get_init_loc() #해당 입자의 초기 위치가 list 형식으로 나옵니다.
         # 차원에 따라 출력하는 메시지를 분류했습니다.
         if len(vec) == 1: #입자가 1차원 벡터일 때
@@ -49,45 +42,68 @@ class particle:
             print("\nInitial Velocity : ", self.velocity,"m/s")
         #위치 벡터의 각 좌표를 출력합니다.
 
-    #새로운 속도를 설정해줍니다.
+    
     def set_velocity(self, vel):
+        ''' 입자의 기존 속도를 새로운 속도로 바꾸어 줍니다. 
+        :param numpy array vel: 갱신할 속도입니다. 
+        '''
         self.velocity = vel
 
-# setup 클래스는 실험을 하기 위한 셋업이라고 생가하면 됩니다.
-# dt(시간 간격)를 정해주고, 보고자 하는 차원을 정해주고, 입자들을 추가할 수 있습니다.
 class setup:
+    '''
+    시뮬레이션의 셋업을 나타내는 클래스입니다. 초기 조건이 설정 된 입자들을 클래스로 가집니다. 
+    기존의 입자 클래스는 이 클래스 안에서 불러와 지게 됩니다. 이는 입자들 마다 시간 간격(dt)이나 차원이 달라지는 것을 막기 위함입니다. 
+    '''
     def __init__(self, dt, dim):
+        ''' setup class의 constructor입니다. 
+        :param float dt: 입자가 움직이는 궤적을 계산할 때 사용되는 시간 간격입니다. 
+        :param int dim: 입자가 움직이는 공간의 차원입니다. 
+        '''
         self.dt = dt #시간 간격
         self.dim = dim #차원
         self.particles = [] #입자들이 저장될 빈 list를 만들어줍니다.
 
     # 입자를 추가합니다.
     def add_particle(self, mass, loc, vel): #질량, 위치, 속도를 정해줍니다.
+        ''' setup에 입자를 추가하는 메소드입니다. 
+        :param float mass: 입자가 움직이는 궤적을 계산할 때 사용되는 시간 간격입니다. 
+        :param numpy array loc: 입자의 초기 위치 입니다. 
+        :param numpy array vel: 입자의 초기 속력 입니다.
+        '''
         tmp = particle(self.dt, self.dim, mass, loc, vel) #처음 setup에서 정해준 dt와 dim을 갖는 입자를 생성합니다.
         self.particles.append(tmp) #particles list에 입자를 추가합니다.
 
     # 입자를 하나 지웁니다. particles list에서 number번째(index는 number-1) 입자를 지웁니다.
     def delete_particle(self, number):
+        ''' setup에서 입자를 지우는 메소드입니다. 
+        :param int number: 지울 입자의 번호입니다. 입자의 번호는 이하의 print_list메소드를 이용하여 확인할 수 있습니다.
+        '''
         del self.particles[number-1]
 
-    # 총 입자 수를 리턴합니다.
+
     def getNparticle(self):
+        ''' 총 입자의 수를 반환하는 메소드입니다. '''
         return len(self.particles)
 
-    # 입자들의 속력으로 구성된 np array가 리턴됩니다.
-    # 입자가 세 개라면 [[10, 2, 1], [2, 1, 12], [3, 21, 1]]와 같이 출력될 것 입니다.
     def getvelocities(self):
+        ''' 입자의 속력으로 구성된 numpy array를 반환하는 메소드입니다.
+        입자가 세 개 들어있고, 각각의 속력이 [10, 2, 1], [2, 1, 12], [3, 21, 1]이라면, [[10, 2, 1], [2, 1, 12], [3, 21, 1]]를 반환합니다. 
+        ''' 
         return np.array([particle.velocity for particle in self.particles])
 
-    # 입자들의 속력이 [[10, 2, 1], [2, 1, 12], [3, 21, 1]]와 같이 들어오면
-    # 입자 0은 [10, 2, 1]를 속력으로 넣어주고 입자 1은 [2, 1, 12], 입자 3은 [3, 21, 1]처럼 넣어줍니다.
     def setvelocities(self, velocities):
+        '''입자들의 속도를 일괄적으로 갱신하는 메소드 입니다. 
+        입자가 3개 일 때, velocity parameter가 [[10, 2, 1], [2, 1, 12], [3, 21, 1]]와 같이 들어오면
+        입자 0의 속력은 [10, 2, 1]으로 갱신되고, 입자 1은 [2, 1, 12], 입자 3은 [3, 21, 1]으로 갱신됩니다. 
+        :param numpy array velocities: 갱신 될 속력
+        '''
         for i, particle in enumerate(self.particles):
             particle.set_velocity(velocities[i])
 
     # 입자들의 마지막 위치로 구성된 np array가 리턴됩니다.
     # 입자가 세 개라면 [[10, 2, 1], [2, 1, 12], [3, 21, 1]]와 같이 출력될 것 입니다. 내부의 세 어레이는 각각 각 입자의 마지막 위치를 말합니다.
     def getlastloc(self):
+
         return np.array([particle.location.get_last_loc() for particle in self.particles])
 
     # 입자들의 위치가 [[10, 2, 1], [2, 1, 12], [3, 21, 1]]와 같이 들어오면
