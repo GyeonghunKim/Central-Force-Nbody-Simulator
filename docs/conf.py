@@ -18,10 +18,10 @@
 
 
 # -- Project information -----------------------------------------------------
-from Central-Force-Nbody-Simulator import __version__ as VERSION
-project = 'Central-Force-Nbody-Simulator'
-copyright = '2019, GyeonghunKim, ___, ___'
-author = 'GyeonghunKim, ___, ___'
+from CFNS import __version__ as VERSION
+project = 'Central Force Nbody Simulator'
+copyright = '2019, Gyeonghun Kim _____ _____'
+author = 'Gyeonghun Kim _____ _____'
 
 # The short X.Y version
 version = VERSION
@@ -43,6 +43,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
+    'sphinx.ext.githubpages',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -105,7 +106,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Central-Force-Nbody-Simulatordoc'
+htmlhelp_basename = 'CentralForceNbodySimulatordoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -132,8 +133,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Central-Force-Nbody-Simulator.tex', 'Central-Force-Nbody-Simulator Documentation',
-     'GyeonghunKim', 'manual'),
+    (master_doc, 'CentralForceNbodySimulator.tex', 'Central Force Nbody Simulator Documentation',
+     'Gyeonghun Kim \\_\\_\\_\\_\\_ \\_\\_\\_\\_\\_', 'manual'),
 ]
 
 
@@ -142,7 +143,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'central-force-nbody-simulator', 'Central-Force-Nbody-Simulator Documentation',
+    (master_doc, 'centralforcenbodysimulator', 'Central Force Nbody Simulator Documentation',
      [author], 1)
 ]
 
@@ -153,8 +154,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Central-Force-Nbody-Simulator', 'Central-Force-Nbody-Simulator Documentation',
-     author, 'Central-Force-Nbody-Simulator', 'One line description of project.',
+    (master_doc, 'CentralForceNbodySimulator', 'Central Force Nbody Simulator Documentation',
+     author, 'CentralForceNbodySimulator', 'One line description of project.',
      'Miscellaneous'),
 ]
 
