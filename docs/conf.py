@@ -18,15 +18,15 @@
 
 
 # -- Project information -----------------------------------------------------
-
+from Central-Force-Nbody-Simulator import __version__ as VERSION
 project = 'Central-Force-Nbody-Simulator'
-copyright = '2019, GyeonghunKim'
-author = 'GyeonghunKim'
+copyright = '2019, GyeonghunKim, ___, ___'
+author = 'GyeonghunKim, ___, ___'
 
 # The short X.Y version
-version = ''
+version = VERSION
 # The full version, including alpha/beta/rc tags
-release = '1.0'
+release = VERSION
 
 
 # -- General configuration ---------------------------------------------------
