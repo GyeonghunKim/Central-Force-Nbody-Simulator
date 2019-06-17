@@ -1,0 +1,431 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CFNS.simulator &mdash; Central Force N-body Simulator Toolbox in Python  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Central Force N-body Simulator Toolbox in Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../CFNS.html">CFNS package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Central Force N-body Simulator Toolbox in Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>CFNS.simulator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for CFNS.simulator</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">particles</span> <span class="k">import</span> <span class="n">setup</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">from</span> <span class="nn">cycler</span> <span class="k">import</span> <span class="n">cycler</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">import</span> <span class="n">axes3d</span>
+
+<div class="viewcode-block" id="simulator"><a class="viewcode-back" href="../../CFNS.simulator.html#CFNS.simulator.simulator">[docs]</a><span class="k">class</span> <span class="nc">simulator</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    주어진 setup에 대해서 시뮬레이션 계산을 하는 부분입니다.</span>
+<span class="sd">    setup이 particle들의 초기 상태를 지정해주고, 시뮬레이션에 사용할 시간 간격을 지정해주는 부분이었다면,</span>
+<span class="sd">    simulator에서는 힘의 형태를 셋업해줄 수 있고 이를 기반으로 상호작용을 계산해서 time evolution을 시켜줍니다.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setup</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; simulator class의 constructor입니다. </span>
+<span class="sd">        constructor는 setup만을 입력받도록 했습니다. 초기 힘은 &quot;-1/(x**2)&quot;을 default로 두었고, 이어지는 함수에서</span>
+<span class="sd">        :param setup setup: 사전의 시뮬레이션에 사용 될 입자들의 초기 조건이 명시 된 setup class입니다.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup</span> <span class="o">=</span> <span class="n">setup</span>
+        <span class="c1"># 디폴트 힘입니다.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">force_string</span> <span class="o">=</span> <span class="s2">&quot;-1/(x**2)&quot;</span>
+
+<div class="viewcode-block" id="simulator.set_force"><a class="viewcode-back" href="../../CFNS.simulator.html#CFNS.simulator.simulator.set_force">[docs]</a>    <span class="k">def</span> <span class="nf">set_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force_string</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{}):</span>
+        <span class="sd">&quot;&quot;&quot;set_force는 물체간에 상호작용하는 중심력의 크기를 구하는 함수를 지정해주는 부분입니다.</span>
+<span class="sd">        입력 parameter로는 force_string과 force_string에 들어가는 파라미터를 넣어주는 방식으로 params dictionary를 받습니다.</span>
+
+<span class="sd">        :param string force_string: 힘을 계산할 때 사용할 식을 파이썬 문법에 맞게 입력한 string입니다. 이때 두 물체 사이의 거리는 &#39;x&#39;를 이용해야 합니다. 아래 params의 key로 주어진 한 글자 문자를 parameter로 사용할 수 있습니다. 이때 상호작용하는 두 물체의 질량을 나타내는 문자는 m1, m2로 고정되어 있습니다.</span>
+<span class="sd">        :param dictionary params: 사전의 시뮬레이션에 사용 될 입자들의 초기 조건이 명시 된 setup class입니다. 파라미터는 편의를 위해서, 또 일반적인 경우에 그러므로, 한 글자라고 가정했습니다.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="c1"># params 딕셔네리를 기반으로 식을 수정(정규표현식을 이용)</span>
+        <span class="k">for</span> <span class="n">one_key</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">force_string</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">one_key</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">one_key</span><span class="p">]),</span> <span class="n">force_string</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">force_string</span> <span class="o">=</span> <span class="n">force_string</span></div>
+        <span class="c1"># task: parameter를 입력받을 수 있게 해야합니다.</span>
+        <span class="c1"># 예를 들어서 force_string = &quot;-k * x**2)&quot;이라면, k를 입력받을 수 있게 해주어야 합니다.</span>
+
+
+    <span class="k">def</span> <span class="nf">__force__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">):</span> <span class="c1"># 1이 2에게 주는 힘</span>
+        <span class="sd">&quot;&quot;&quot;두 위치에 대해서 힘을 계산하는 클래스입니다.</span>
+<span class="sd">        외부에서 사용하면 문제를 일으킬 수 있습니다. exec메소드 내부에서만 사용합시다.</span>
+<span class="sd">        :param numpy array x1: 첫 번째 입자의 위치</span>
+<span class="sd">        :param numpy array x2: 두 번째 입자의 위치</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 각 질량을 가져옵니다. 이는 이 메소드에서 사용이 안되는 것 처럼 보일 지 모르지만, force string에 m1, m2가 들어있을 경우에</span>
+        <span class="c1"># 사용됩니다. 위의 constructor에서는 self.m1과 self.m2가 없으나, exec메소드에서 이 메소드를 사용하기 직전에 상호작용하는 물체에</span>
+        <span class="c1"># 따라서 self.m1과 self.m2를 지정해줍니다.</span>
+        <span class="n">m1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">m1</span>
+        <span class="n">m2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">m2</span>
+        <span class="n">tp1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span> <span class="c1"># 두 위치의 차이벡터입니다. (변위 벡터 입니다.)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">tp1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="c1"># 두 위치의 차이의 크기입니다.</span>
+        <span class="n">force_size</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">force_string</span><span class="p">)</span> <span class="c1"># 두 위치의 차이의 크기를 바탕으로 힘의 크기를 구했습니다.</span>
+        <span class="n">direction</span> <span class="o">=</span>  <span class="n">tp1</span> <span class="o">/</span> <span class="n">x</span> <span class="c1"># [x2[i] - x1[i] for i in range(len(x1))] # 두 위치의 차이를 바탕으로 힘의 방향 단위벡터를 구했습니다.</span>
+        <span class="k">return</span> <span class="n">direction</span> <span class="o">*</span> <span class="n">force_size</span> <span class="c1"># 힘의 크기와 방향벡터를 곱해서 힘 벡터를 구했습니다.</span>
+
+    <span class="c1"># </span>
+    <span class="c1"># </span>
+<div class="viewcode-block" id="simulator.exec"><a class="viewcode-back" href="../../CFNS.simulator.html#CFNS.simulator.simulator.exec">[docs]</a>    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">iter</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;실제로 입자들을 상호작용에 따라서 운동 시키는 부분입니다. 지정해준 횟수(iter)만큼 반복합니다.</span>
+<span class="sd">        :param int iter: 계산을 반복할 횟수 </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_ptl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">getNparticle</span><span class="p">()</span> <span class="c1"># 입자의 수</span>
+        <span class="n">mass</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">particle</span><span class="o">.</span><span class="n">mass</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="k">for</span> <span class="n">particle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="n">mass</span> <span class="c1"># self.mass는 test를 위해서 self.mass로 하나 만들어 둡니다.</span>
+        <span class="c1"># 각 입자의 질량으로 구성된 행렬입니다.</span>
+        <span class="c1"># 질량 1인 입자 하나, 질량 2인 입자 하나가 있다면, [[1,1,1],[2,2,2]]와 같습니다.</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">iter</span><span class="p">):</span>
+            <span class="c1"># force_matrix는 (i,j)성분이 j번째 입자가 i번째 입자에 주는 힘 벡터인 행렬입니다.</span>
+            <span class="c1"># 구조로 보면 3차원 행렬이 되는 것 입니다.</span>
+            <span class="c1"># 이하의 첫 줄에서 그러한 구조를 가진 행렬을 0으로 초기화 해주고, 이중 포문에서 자리를 채웁니다.</span>
+            <span class="n">force_matrix</span> <span class="o">=</span> <span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_ptl</span><span class="p">)]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_ptl</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_ptl</span><span class="p">):</span>
+                <span class="c1"># 여기서 m1을 지정해줍니다. 이는 추후에 self.__force__메소드에서 사용하기 위함입니다.</span>
+                <span class="c1"># 자세한 설명은 __force__ 메소드를 참조하시길 바랍니다.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">m1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">mass</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_ptl</span><span class="p">):</span>
+                    <span class="c1"># 자기자신에게 주는 힘은 0입니다.</span>
+                    <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">k</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    <span class="c1"># 여기서 m2을 지정해줍니다. 이는 추후에 self.__force__메소드에서 사용하기 위함입니다.</span>
+                    <span class="c1"># 자세한 설명은 __force__ 메소드를 참조하시길 바랍니다.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">m2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">mass</span>
+                    <span class="c1"># 행렬 성분에 상호작용하는 힘 벡터를 넣어줍니다.</span>
+                    <span class="n">force_matrix</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__force__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                                             <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+            <span class="c1"># force_matrix를 np array로 바꾸어줍니다.</span>
+            <span class="n">force_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">force_matrix</span><span class="p">])</span>
+            <span class="c1"># force matrix를 두 번째 축으로 더하면 각 물체에 작용하는 알짜힘이 됩니다.</span>
+            <span class="n">net_force</span> <span class="o">=</span> <span class="n">force_matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># 이렇게 만든 알짜힘 행렬(벡터의 벡터)는 앞의 질량 행렬과 같은 shape입니다. 이 둘을 componentwise하게 나누면</span>
+            <span class="c1"># 가속도 벡터의 벡터가 나옵니다.</span>
+            <span class="n">acce</span> <span class="o">=</span> <span class="p">(</span><span class="n">net_force</span> <span class="o">/</span> <span class="n">mass</span><span class="p">)</span>
+            <span class="c1"># 위의 가속도에 시간 간격을 곱해서 원래 속도에 더해주면, 나중 속도를 구할 수 있습니다.</span>
+            <span class="c1"># 이때 setup 클래스에 설명이 있겠지만, setup.getvelocities()를 통해서 현재 속도를 가속도 벡터와 같은 shape으로 불러옵니다.</span>
+            <span class="n">vel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">getvelocities</span><span class="p">()</span> <span class="o">+</span> <span class="n">acce</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">dt</span>
+            <span class="c1"># vel을 각 입자의 속력으로 교환해줍니다.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">setvelocities</span><span class="p">(</span><span class="n">vel</span><span class="p">)</span>
+            <span class="c1"># 위의 속도에 시간 간격을 곱해서 원래 위치에 더해주면, 나중 위치를 구할 수 있습니다.</span>
+            <span class="c1"># 이때 setup 클래스에 설명이 있겠지만, setup.getlastloc()를 통해서 현재 위치를 속도 벡터와 같은 shape으로 불러옵니다.</span>
+            <span class="n">loc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">getlastloc</span><span class="p">()</span> <span class="o">+</span> <span class="n">vel</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">dt</span>
+            <span class="c1"># vel과 같은 shape을 각 입자의 위치에 append해 줍니다.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">appendloc</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="simulator.color_gradient"><a class="viewcode-back" href="../../CFNS.simulator.html#CFNS.simulator.simulator.color_gradient">[docs]</a>    <span class="k">def</span> <span class="nf">color_gradient</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; 입자들의 움직임을 시간에 따라 다른 색깔을 가지는(그라데이션) 점으로 표시합니다.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#2차원 벡터인 경우</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">x_all</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#각 벡터의 x좌표 변화만 모아놓을 list입니다. ex. x_all = [[1,2,3,4], [4,5,6,7], [7,8,9,10]]; 첫 번째 입자의 x좌표가 1,2,3,4으로 변화한 것입니다. 입자는 총 3개인 경우입니다.</span>
+            <span class="n">y_all</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#각 벡터의 y좌표 변화만 모아놓을 list입니다.</span>
+            <span class="n">N_ptl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">getNparticle</span><span class="p">()</span> <span class="c1"># 입자의 수.</span>
+
+            <span class="c1">#self에 저장되어 있는 x,y좌표를 각각 x_all, y_all에 저장합니다.</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_ptl</span><span class="p">):</span>
+                <span class="n">x_all</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">data</span><span class="p">])</span> <span class="c1">#x_all[i]: (i+1)번째 입자의 x좌표 변화가 저장된 벡터</span>
+                <span class="n">y_all</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">data</span><span class="p">])</span> <span class="c1">#y[i]: (i+1)번째 입자의 y좌표 변화가 저장된 벡터</span>
+
+            <span class="c1">#plot을 생성합니다.</span>
+            <span class="n">fig_gradient</span><span class="p">,</span> <span class="n">ax_gradient</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+            <span class="c1">#colormap 4종류를 설정했습니다.</span>
+            <span class="n">MAP1</span> <span class="o">=</span> <span class="s1">&#39;winter&#39;</span><span class="p">;</span> <span class="n">MAP2</span> <span class="o">=</span> <span class="s1">&#39;spring&#39;</span><span class="p">;</span> <span class="n">MAP3</span> <span class="o">=</span> <span class="s1">&#39;autumn&#39;</span><span class="p">;</span> <span class="n">MAP4</span> <span class="o">=</span> <span class="s1">&#39;summer&#39;</span> <span class="c1">#더 많은 종류를 설정해도 좋으나 벡터가 5종류 이상일 경우 시각적으로 구분이 힘들어질 수 있습니다.</span>
+            <span class="c1">#colormap의 색깔을 cycle하며 색깔을 정하는 변수를 설정합니다. 이후 plotting에서 쓰입니다.</span>
+            <span class="n">cm1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">MAP1</span><span class="p">);</span> <span class="n">cm2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">MAP2</span><span class="p">);</span> <span class="n">cm3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">MAP3</span><span class="p">);</span> <span class="n">cm4</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">MAP4</span><span class="p">)</span> <span class="c1">#정한 colormap을 불러옵니다.</span>
+            <span class="c1">#x[i]의 점들에 각각 colormap의 다른 색깔을 지정해줄 것입니다.</span>
+            <span class="c1">#이때, x[i]의 길이들이 모두 같다고 가정했습니다. 설령 길이가 같지 않더라도, 연속적인 colormap에서 큰 차이를 보이지 않을 것입니다.</span>
+            <span class="n">cy</span> <span class="o">=</span> <span class="n">cycler</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,[</span><span class="n">cm1</span><span class="p">(</span><span class="mf">1.</span><span class="o">*</span><span class="n">i</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> \
+            <span class="o">+</span> <span class="p">[</span><span class="n">cm2</span><span class="p">(</span><span class="mf">1.</span><span class="o">*</span><span class="n">j</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="n">cm3</span><span class="p">(</span><span class="mf">1.</span><span class="o">*</span><span class="n">j</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>\
+            <span class="o">+</span> <span class="p">[</span><span class="n">cm4</span><span class="p">(</span><span class="mf">1.</span><span class="o">*</span><span class="n">j</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+            <span class="n">ax_gradient</span><span class="o">.</span><span class="n">set_prop_cycle</span><span class="p">(</span><span class="n">cy</span><span class="p">)</span> <span class="c1">#축에 cy를 설정합니다.</span>
+
+            <span class="c1">#각 벡터별로 위치 변화를 표시합니다.</span>
+            <span class="c1">#같은 벡터는 같은 colormap의 그라데이션으로 표시됩니다.</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_ptl</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">ax_gradient</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span><span class="n">y_all</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="c1">#plot을 화면에 띄웁니다.</span>
+
+        <span class="c1">#3차원인 벡터인 경우</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">x_all</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#각 벡터의 x좌표 변화만 모아놓을 list입니다. ex. x_all = [[1,2,3,4], [4,5,6,7], [7,8,9,10]]; 첫 번째 입자의 x좌표가 1,2,3,4으로 변화한 것입니다. 입자는 총 3개인 경우입니다.</span>
+            <span class="n">y_all</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#각 벡터의 y좌표 변화만 모아놓을 list입니다.</span>
+            <span class="n">z_all</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">N_ptl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">getNparticle</span><span class="p">()</span> <span class="c1"># 입자의 수.</span>
+
+            <span class="c1">#self에 저장되어 있는 x,y좌표를 각각 x_all, y_all에 저장합니다.</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_ptl</span><span class="p">):</span>
+                <span class="n">x_all</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">data</span><span class="p">])</span> <span class="c1">#x_all[i]: (i+1)번째 입자의 x좌표 변화가 저장된 벡터</span>
+                <span class="n">y_all</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">data</span><span class="p">])</span> <span class="c1">#y_all[i]: (i+1)번째 입자의 y좌표 변화가 저장된 벡터</span>
+                <span class="n">z_all</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">data</span><span class="p">])</span> <span class="c1">#z_all[i]: (i+1)번째 입자의 z좌표 변화가 저장된 벡터</span>
+
+            <span class="c1">#plot을 생성합니다.</span>
+            <span class="n">fig_gradient</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+            <span class="n">ax_gradient</span> <span class="o">=</span> <span class="n">fig_gradient</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+            <span class="c1">#colormap 4종류를 설정했습니다.</span>
+            <span class="n">MAP1</span> <span class="o">=</span> <span class="s1">&#39;winter&#39;</span><span class="p">;</span> <span class="n">MAP2</span> <span class="o">=</span> <span class="s1">&#39;spring&#39;</span><span class="p">;</span> <span class="n">MAP3</span> <span class="o">=</span> <span class="s1">&#39;autumn&#39;</span><span class="p">;</span> <span class="n">MAP4</span> <span class="o">=</span> <span class="s1">&#39;summer&#39;</span> <span class="c1">#더 많은 종류를 설정해도 좋으나 벡터가 5종류 이상일 경우 시각적으로 구분이 힘들어질 수 있습니다.</span>
+            <span class="c1">#colormap의 색깔을 cycle하며 색깔을 정하는 변수(cy)를 설정합니다. 이후 plotting에서 쓰입니다.</span>
+            <span class="n">cm1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">MAP1</span><span class="p">);</span> <span class="n">cm2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">MAP2</span><span class="p">);</span> <span class="n">cm3</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">MAP3</span><span class="p">);</span> <span class="n">cm4</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">MAP4</span><span class="p">)</span> <span class="c1">#설정한 colormap을 불러옵니다.</span>
+            <span class="c1">#입자의 각 점에 colormap의 다른 색깔을 지정해줄 것입니다.</span>
+            <span class="c1">#이때, 각 입자에 저장된 위치 개수가 모두 같다고 가정했습니다. 설령 길이가 같지 않더라도, 연속적인 colormap에서 큰 차이를 보이지 않을 것입니다.</span>
+            <span class="n">cy</span> <span class="o">=</span> <span class="n">cycler</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">,[</span><span class="n">cm1</span><span class="p">(</span><span class="mf">1.</span><span class="o">*</span><span class="n">i</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> \
+            <span class="o">+</span> <span class="p">[</span><span class="n">cm2</span><span class="p">(</span><span class="mf">1.</span><span class="o">*</span><span class="n">j</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="n">cm3</span><span class="p">(</span><span class="mf">1.</span><span class="o">*</span><span class="n">j</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>\
+            <span class="o">+</span> <span class="p">[</span><span class="n">cm4</span><span class="p">(</span><span class="mf">1.</span><span class="o">*</span><span class="n">j</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+            <span class="n">ax_gradient</span><span class="o">.</span><span class="n">set_prop_cycle</span><span class="p">(</span><span class="n">cy</span><span class="p">)</span> <span class="c1">#축에 cy를 설정합니다.</span>
+
+            <span class="c1">#각 벡터별로 위치 변화를 표시합니다.</span>
+            <span class="c1">#같은 벡터는 같은 colormap의 그라데이션으로 표시됩니다.</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_ptl</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">ax_gradient</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_all</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span><span class="n">y_all</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span><span class="n">z_all</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="c1">#plot을 화면에 띄웁니다.</span></div>
+
+<div class="viewcode-block" id="simulator.trajectory"><a class="viewcode-back" href="../../CFNS.simulator.html#CFNS.simulator.simulator.trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">projection</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; 3차원 가시화를 위해서 사용합니다. </span>
+<span class="sd">        :param bool projection: True일 경우 각 평면에 사영된 경로도 같이 출력합니다. defalult 는 False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_ptl</span><span class="p">)]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_ptl</span><span class="p">)]</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_ptl</span><span class="p">)]</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_ptl</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_ptl</span><span class="p">):</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
+            <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
+            <span class="n">sc</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">cmap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">get_facecolor</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">projection</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">N_ptl</span><span class="p">):</span>
+                <span class="n">xflat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">min</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()))</span>
+                <span class="n">yflat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">max</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()))</span>
+                <span class="n">zflat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">min</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_zlim</span><span class="p">()))</span>
+
+                <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xflat</span><span class="p">,</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">yflat</span><span class="p">,</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">c</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">zflat</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="simulator_test"><a class="viewcode-back" href="../../CFNS.simulator.html#CFNS.simulator.simulator_test">[docs]</a><span class="k">class</span> <span class="nc">simulator_test</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; simulator class를 테스트 하기 위한 unittest class입니다. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="simulator_test.setUp"><a class="viewcode-back" href="../../CFNS.simulator.html#CFNS.simulator.simulator_test.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">setup</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">add_particle</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">add_particle</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">add_particle</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim</span> <span class="o">=</span> <span class="n">simulator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">)</span></div>
+
+    <span class="c1"># set_force 함수에서 파라미터를 잘 받는지 확인합니다.</span>
+<div class="viewcode-block" id="simulator_test.test_1"><a class="viewcode-back" href="../../CFNS.simulator.html#CFNS.simulator.simulator_test.test_1">[docs]</a>    <span class="k">def</span> <span class="nf">test_1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">set_force</span><span class="p">(</span><span class="s2">&quot;-G*m1*m2/(x**2)&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;G&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">force_string</span> <span class="p">,</span><span class="s2">&quot;-3*m1*m2/(x**2)&quot;</span><span class="p">,</span> <span class="s2">&quot;force_string parameter works wrong&quot;</span><span class="p">)</span></div>
+
+    <span class="c1"># 내부에서 mass matrix가 잘 형성되었는지 확인합니다.</span>
+<div class="viewcode-block" id="simulator_test.test_2"><a class="viewcode-back" href="../../CFNS.simulator.html#CFNS.simulator.simulator_test.test_2">[docs]</a>    <span class="k">def</span> <span class="nf">test_2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">mass</span> <span class="o">==</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]))</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+                        <span class="s2">&quot;mass matrix is wrong parameter works wrong&quot;</span><span class="p">)</span></div>
+
+    <span class="c1"># 상호작용이 없는 경우 잘 움직이는지 확인했습니다.</span>
+<div class="viewcode-block" id="simulator_test.test_3"><a class="viewcode-back" href="../../CFNS.simulator.html#CFNS.simulator.simulator_test.test_3">[docs]</a>    <span class="k">def</span> <span class="nf">test_3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">table2</span> <span class="o">=</span> <span class="n">setup</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">table2</span><span class="o">.</span><span class="n">add_particle</span><span class="p">(</span><span class="mi">10232</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">table2</span><span class="o">.</span><span class="n">add_particle</span><span class="p">(</span><span class="mi">234</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+        <span class="n">sim2</span> <span class="o">=</span> <span class="n">simulator</span><span class="p">(</span><span class="n">table2</span><span class="p">)</span>
+        <span class="n">sim2</span><span class="o">.</span><span class="n">set_force</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="n">sim2</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">sim2</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">getvelocities</span><span class="p">()</span> <span class="o">==</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]]))</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+                        <span class="s2">&quot;free-evolution velocity changes&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">sim2</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">getlastloc</span><span class="p">()</span> <span class="o">==</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]]))</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
+                        <span class="s2">&quot;free-evolution location is weird&quot;</span><span class="p">)</span></div></div>
+
+    <span class="c1"># 상호작용이 있는 경우는 값으로 에러를 확인하기 어려워 jupyter notebook에서 유명한 문제를 잘 푸는지로 확인했습니다.</span>
+    <span class="c1"># 예를 들어서 두 물체나, 세 물체가 원 궤도를 그리며 도는 경우에 대해서 이론적 계산에서 예상되는 결과를 잘 설명합니다.</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">exit</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Author
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

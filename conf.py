@@ -14,25 +14,24 @@
 #
 # import os
 # import sys
-# sys.path.insert(0, '/home/ghkim/Central-Force-Nbody-Simulator/CFNS')
+# sys.path.insert(0, os.path.abspath('.'))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'Central Force N-body Simulator Toolbox in Python'
-copyright = '2019, Author'
-author = 'Author'
-
-# The short X.Y version
-version = ''
-# The full version, including alpha/beta/rc tags
-release = ''
-
+project = 'Central Force N-body Simulator'
+copyright = '2019, Gyeonghun Kim ________ __________'
+author = 'Gyeonghun Kim ________ __________'
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('../CFNS'))
-autodoc_member_order = 'bysource'
+from CFNS import __version__ as VERSION
+# The short X.Y version
+version = VERSION
+# The full version, including alpha/beta/rc tags
+release = VERSION
+
 
 # -- General configuration ---------------------------------------------------
 
@@ -45,8 +44,10 @@ autodoc_member_order = 'bysource'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.githubpages',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -66,7 +67,7 @@ master_doc = 'index'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = 'en'
+language = 'ko'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -82,7 +83,7 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'alabaster'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -109,7 +110,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'CFNSdoc'
+htmlhelp_basename = 'CentralForceN-bodySimulatordoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -136,8 +137,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'CFNS.tex', 'CFNS Documentation',
-     'Author', 'manual'),
+    (master_doc, 'CentralForceN-bodySimulator.tex', 'Central Force N-body Simulator Documentation',
+     'Gyeonghun Kim \\_\\_\\_\\_\\_\\_\\_\\_ \\_\\_\\_\\_\\_\\_\\_\\_\\_\\_', 'manual'),
 ]
 
 
@@ -146,7 +147,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'cfns', 'CFNS Documentation',
+    (master_doc, 'centralforcen-bodysimulator', 'Central Force N-body Simulator Documentation',
      [author], 1)
 ]
 
@@ -157,8 +158,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'CFNS', 'CFNS Documentation',
-     author, 'CFNS', 'One line description of project.',
+    (master_doc, 'CentralForceN-bodySimulator', 'Central Force N-body Simulator Documentation',
+     author, 'CentralForceN-bodySimulator', 'One line description of project.',
      'Miscellaneous'),
 ]
 
@@ -182,6 +183,11 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
+
+# -- Options for intersphinx extension ---------------------------------------
+
+# Example configuration for intersphinx: refer to the Python standard library.
+intersphinx_mapping = {'https://docs.python.org/': None}
 
 # -- Options for todo extension ----------------------------------------------
 

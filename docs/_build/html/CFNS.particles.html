@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CFNS.particles module &mdash; Central Force N-body Simulator Toolbox in Python  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CFNS.simulator module" href="CFNS.simulator.html" />
+    <link rel="prev" title="CFNS.data_types module" href="CFNS.data_types.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Central Force N-body Simulator Toolbox in Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="CFNS.html">CFNS package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="CFNS.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="CFNS.data_types.html">CFNS.data_types module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CFNS.particles module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CFNS.simulator.html">CFNS.simulator module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="CFNS.html#module-CFNS">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Central Force N-body Simulator Toolbox in Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="CFNS.html">CFNS package</a> &raquo;</li>
+        
+      <li>CFNS.particles module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/CFNS.particles.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-CFNS.particles">
+<span id="cfns-particles-module"></span><h1>CFNS.particles module<a class="headerlink" href="#module-CFNS.particles" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="CFNS.particles.particle">
+<em class="property">class </em><code class="descclassname">CFNS.particles.</code><code class="descname">particle</code><span class="sig-paren">(</span><em>dt</em>, <em>dim</em>, <em>mass</em>, <em>loc</em>, <em>vel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#particle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.particle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>입자 하나를 나타내는 클래스입니다. 위치와 속도 그리고 질량에 대한 정보를 가지고 있습니다.
+위치에 대해서는 앞의 location series 형태로 데이터를 저장하고 속도와 질량은 실수형으로 가집니다. 
+일반적으로 setup class의 원소로 사용되는 클래스로, 직접 particle class의 인스턴스를 선언할 일은 없습니다.</p>
+<dl class="method">
+<dt id="CFNS.particles.particle.print_info">
+<code class="descname">print_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#particle.print_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.particle.print_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>입자에 대한 정보를 출력합니다. #질량, 초기 위치, 초기 속도를 출력합니다.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.particle.set_velocity">
+<code class="descname">set_velocity</code><span class="sig-paren">(</span><em>vel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#particle.set_velocity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.particle.set_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>입자의 기존 속도를 새로운 속도로 바꾸어 줍니다. 
+:param numpy array vel: 갱신할 속도입니다.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="CFNS.particles.setup">
+<em class="property">class </em><code class="descclassname">CFNS.particles.</code><code class="descname">setup</code><span class="sig-paren">(</span><em>dt</em>, <em>dim</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>시뮬레이션의 셋업을 나타내는 클래스입니다. 초기 조건이 설정 된 입자들을 클래스로 가집니다. 
+기존의 입자 클래스는 이 클래스 안에서 불러와 지게 됩니다. 이는 입자들 마다 시간 간격(dt)이나 차원이 달라지는 것을 막기 위함입니다.</p>
+<dl class="method">
+<dt id="CFNS.particles.setup.add_particle">
+<code class="descname">add_particle</code><span class="sig-paren">(</span><em>mass</em>, <em>loc</em>, <em>vel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#setup.add_particle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.setup.add_particle" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup에 입자를 추가하는 메소드입니다. 
+:param float mass: 입자가 움직이는 궤적을 계산할 때 사용되는 시간 간격입니다. 
+:param numpy array loc: 입자의 초기 위치 입니다. 
+:param numpy array vel: 입자의 초기 속력 입니다.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.setup.delete_particle">
+<code class="descname">delete_particle</code><span class="sig-paren">(</span><em>number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#setup.delete_particle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.setup.delete_particle" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup에서 입자를 지우는 메소드입니다. 
+:param int number: 지울 입자의 번호입니다. 입자의 번호는 이하의 print_list메소드를 이용하여 확인할 수 있습니다.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.setup.getNparticle">
+<code class="descname">getNparticle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#setup.getNparticle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.setup.getNparticle" title="Permalink to this definition">¶</a></dt>
+<dd><p>총 입자의 수를 반환하는 메소드입니다.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.setup.getvelocities">
+<code class="descname">getvelocities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#setup.getvelocities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.setup.getvelocities" title="Permalink to this definition">¶</a></dt>
+<dd><p>입자의 속력으로 구성된 numpy array를 반환하는 메소드입니다.
+입자가 세 개 들어있고, 각각의 속력이 [10, 2, 1], [2, 1, 12], [3, 21, 1]이라면, [[10, 2, 1], [2, 1, 12], [3, 21, 1]]를 반환합니다.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.setup.setvelocities">
+<code class="descname">setvelocities</code><span class="sig-paren">(</span><em>velocities</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#setup.setvelocities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.setup.setvelocities" title="Permalink to this definition">¶</a></dt>
+<dd><p>입자들의 속도를 일괄적으로 갱신하는 메소드 입니다. 
+입자가 3개 일 때, velocity parameter가 [[10, 2, 1], [2, 1, 12], [3, 21, 1]]와 같이 들어오면
+입자 0의 속력은 [10, 2, 1]으로 갱신되고, 입자 1은 [2, 1, 12], 입자 3은 [3, 21, 1]으로 갱신됩니다. 
+:param numpy array velocities: 갱신 될 속력</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.setup.getlastloc">
+<code class="descname">getlastloc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#setup.getlastloc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.setup.getlastloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>입자들의 마지막 위치들로 구성 된 numpy array가 반환되는 메소드 입니다. 
+입자가 세 개이고, 각각의 location series의 마지막 원소가 [10, 2, 1], [2, 1, 12], [3, 21, 1]이라면, 
+[[10, 2, 1], [2, 1, 12], [3, 21, 1]]이 반환됩니다.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.setup.appendloc">
+<code class="descname">appendloc</code><span class="sig-paren">(</span><em>loc</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#setup.appendloc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.setup.appendloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>입자들의 위치를 일괄적으로 추가하는 메소드 입니다, 
+입자가 3개 일 때, loc parameter가 [[10, 2, 1], [2, 1, 12], [3, 21, 1]]와 같이 들어오면
+입자 0의 location series에는 [10, 2, 1]가 append되고, 입자 1에는 [2, 1, 12], 입자 3에는 [3, 21, 1]이 append 됩니다. 
+:param numpy array loc: 갱신 될 위치</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.setup.print_list">
+<code class="descname">print_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#setup.print_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.setup.print_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>입자들의 일련번호와 정보를 출력하는 메소드 입니다.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.setup.print_particles">
+<code class="descname">print_particles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#setup.print_particles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.setup.print_particles" title="Permalink to this definition">¶</a></dt>
+<dd><p>입자들의 초기 상태를 가시화 해주는 메소드입니다. 
+입자들의 위치를 점으로, 초기 속력을 화살표로 표현해줍니다. 
+3차원에서는 효과적인 가시화가 되지 않아서 2차원에서만 지원하도록 만들었습니다.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="CFNS.particles.TestParticleSetup">
+<em class="property">class </em><code class="descclassname">CFNS.particles.</code><code class="descname">TestParticleSetup</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#TestParticleSetup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.TestParticleSetup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Particle class와 setup class를 테스트 하기 위한 unittest class입니다.</p>
+<dl class="method">
+<dt id="CFNS.particles.TestParticleSetup.test_particle">
+<code class="descname">test_particle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#TestParticleSetup.test_particle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.TestParticleSetup.test_particle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.TestParticleSetup.test_set_velocity">
+<code class="descname">test_set_velocity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#TestParticleSetup.test_set_velocity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.TestParticleSetup.test_set_velocity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.TestParticleSetup.test_setup">
+<code class="descname">test_setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#TestParticleSetup.test_setup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.TestParticleSetup.test_setup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.TestParticleSetup.test_add_particle">
+<code class="descname">test_add_particle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#TestParticleSetup.test_add_particle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.TestParticleSetup.test_add_particle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.TestParticleSetup.test_delete_particle">
+<code class="descname">test_delete_particle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#TestParticleSetup.test_delete_particle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.TestParticleSetup.test_delete_particle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.TestParticleSetup.test_getNparticle">
+<code class="descname">test_getNparticle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#TestParticleSetup.test_getNparticle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.TestParticleSetup.test_getNparticle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="CFNS.particles.TestParticleSetup.test_getvelocities">
+<code class="descname">test_getvelocities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/particles.html#TestParticleSetup.test_getvelocities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.particles.TestParticleSetup.test_getvelocities" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="CFNS.simulator.html" class="btn btn-neutral float-right" title="CFNS.simulator module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="CFNS.data_types.html" class="btn btn-neutral float-left" title="CFNS.data_types module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Author
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
