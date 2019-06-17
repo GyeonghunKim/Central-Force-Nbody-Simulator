@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CFNS.data_types &mdash; Central Force N-body Simulator in Python 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Central Force N-body Simulator in Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../CFNS.html">CFNS package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Central Force N-body Simulator in Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>CFNS.data_types</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for CFNS.data_types</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span> 
+<span class="kn">import</span> <span class="nn">unittest</span>
+<div class="viewcode-block" id="vector_series"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.vector_series">[docs]</a><span class="k">class</span> <span class="nc">vector_series</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; vector series class는 벡터들의 series를 표현하는 클래스입니다. </span>
+<span class="sd">    초기 데이터를 기반으로 append하는 방식으로 사용됩니다.</span>
+<span class="sd">    &quot;&quot;&quot;</span> 
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="p">[]):</span> 
+        <span class="sd">&quot;&quot;&quot; vector series의 constructor입니다. </span>
+<span class="sd">        :param int dim: 벡터의 차원입니다. 3차원 벡터의 series를 표현하고 싶다면 3을 입력하면 됩니다.</span>
+<span class="sd">        :param numpy array data: 초기 데이터입니다. 이 값의 차원과 위의 dim입력의 차원이 맞지 않으면 에러가 납니다.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)])]</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="n">dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;initial value를 확인하세요!&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)]</span>
+        <span class="c1">#데이터 갯수</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="c1"># 벡터를 추가하는 경우 append 사용, 추가 데이터는 one_data 변수에 들어감</span>
+<div class="viewcode-block" id="vector_series.append"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.vector_series.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">one_data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; vector series의 constructor입니다. </span>
+<span class="sd">        :param int dim: 벡터의 차원입니다. 3차원 벡터의 series를 표현하고 싶다면 3을 입력하면 됩니다.</span>
+<span class="sd">        :param numpy array data: 초기 데이터입니다. 이 값의 차원과 위의 dim입력의 차원이 맞지 않으면 에러가 납니다.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">one_data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="o">+=</span><span class="mi">1</span></div></div>
+
+
+<div class="viewcode-block" id="location_series"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.location_series">[docs]</a><span class="k">class</span> <span class="nc">location_series</span><span class="p">(</span><span class="n">vector_series</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; vector series를 상속받아서 만들어진 클래스입니다. 기존의 vector series에 시계열이라는 의미가 추가되었고, 시화 메소드가</span>
+<span class="sd">    추가되었습니다. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;location_series class의 constructor입니다. </span>
+<span class="sd">        :param float dt: vector들 사이의 시간 간격 입니다. </span>
+<span class="sd">        :param int dim: 벡터의 차원입니다. 3차원 벡터의 series를 표현하고 싶다면 3을 입력하면 됩니다.</span>
+<span class="sd">        :param numpy array data: 초기 데이터입니다. 이 값의 차원과 위의 dim입력의 차원이 맞지 않으면 에러가 납니다.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vector_series</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span>
+
+<div class="viewcode-block" id="location_series.get_init_loc"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.location_series.get_init_loc">[docs]</a>    <span class="k">def</span> <span class="nf">get_init_loc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; 초기 위치를 반환하는 메소드 입니다. 첫 벡터를 반환합니다. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+ 
+<div class="viewcode-block" id="location_series.get_last_loc"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.location_series.get_last_loc">[docs]</a>    <span class="k">def</span> <span class="nf">get_last_loc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; 마지막 위치를 반환하는 메소드 입니다. 마지막 벡터를 반환합니다. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+ 
+<div class="viewcode-block" id="location_series.plot_timeseries"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.location_series.plot_timeseries">[docs]</a>    <span class="k">def</span> <span class="nf">plot_timeseries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">whichdim</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; 특정 차원(0: x축, 1: y축, 2: z축)의 값 또는 극좌표에서의 값을 시간에 대해서 변화를 출력하는 함수. </span>
+<span class="sd">        :param int whichdim: 어떤 축을 기준으로 그래프를 그릴지를 알려주는데 사용하는 인자입니다. 0: x축, 1: y축, 2: z축, 3: 극좌표 반지름, 4: 극좌표 각도 입니다. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># 처음에 설정된 dt에서 data의 갯수만큼 dt*i를 하여 시간을 계산함</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)]</span>
+        <span class="c1"># x축, y축, z축으로 그래프를 그리는 경우,</span>
+        <span class="k">if</span> <span class="n">whichdim</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1">#x는 [1,2,3] 형식의 데이터에서 whichdim==0이면 x-axis, ==1이면 y-axis, ==2이면 z-axis</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="n">whichdim</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
+            <span class="c1">#나중에 y축에 나타낼 문자가 whichdim 숫자에 따라 달라지기 때문에 각각에 대해서 다르게 지정함</span>
+            <span class="k">if</span> <span class="n">whichdim</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">letter</span> <span class="o">=</span> <span class="s2">&quot;X-axis&quot;</span>
+            <span class="k">elif</span> <span class="n">whichdim</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">letter</span><span class="o">=</span><span class="s2">&quot;Y-axis&quot;</span>
+            <span class="k">elif</span> <span class="n">whichdim</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+                <span class="n">letter</span><span class="o">=</span><span class="s2">&quot;Z-axis&quot;</span>
+        <span class="c1">#만약 whichdim==3인경우, 원점으로부터의 거리를 측정</span>
+        <span class="k">elif</span> <span class="n">whichdim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">letter</span> <span class="o">=</span> <span class="s2">&quot;distance from the origin&quot;</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">d</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
+        <span class="c1"># whichdim==4인 경우, x축에 대한 각도를 측정</span>
+        <span class="k">elif</span> <span class="n">whichdim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span> <span class="c1"># only for 2d</span>
+            <span class="n">letter</span> <span class="o">=</span> <span class="s2">&quot;degree in X-axis&quot;</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#그 외의 경우 error</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dimension input is weird&quot;</span><span class="p">)</span>
+        <span class="c1">#t와 x 관계를 그래프로 그림. 각각의 점에 대해서는 &#39;.&#39;으로 마킹하고, 그래프의 제목을 설정함</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Changes as time changes&#39;</span><span class="p">)</span>
+        <span class="c1"># x축 라벨 설정</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+        <span class="c1"># y축 라벨 설정</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">letter</span><span class="p">)</span>
+        <span class="c1"># 그래프 새 화면에 창띄우기</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="data_types_Test"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test">[docs]</a><span class="k">class</span> <span class="nc">data_types_Test</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; vector_series class와 location_series class를 테스트 하기 위한 unittest class입니다. &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="data_types_Test.test_1"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_1">[docs]</a>    <span class="k">def</span> <span class="nf">test_1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">a</span><span class="o">=</span><span class="n">vector_series</span><span class="p">(</span><span class="mi">3</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;dimension problem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">len</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;len problem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;data problem&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="data_types_Test.test_2"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_2">[docs]</a>    <span class="k">def</span> <span class="nf">test_2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">b</span><span class="o">=</span><span class="n">vector_series</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;dimension problem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">len</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;len problem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">b</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;data problem&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="data_types_Test.test_3"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_3">[docs]</a>    <span class="k">def</span> <span class="nf">test_3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">a</span><span class="o">=</span><span class="n">vector_series</span><span class="p">(</span><span class="mi">3</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]))</span>
+        <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">len</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;len problem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;data problem&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="data_types_Test.test_4"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_4">[docs]</a>    <span class="k">def</span> <span class="nf">test_4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">location_series</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="s2">&quot;dt problem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;dimension problem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">len</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;len problem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;data problem&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="data_types_Test.test_5"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_5">[docs]</a>    <span class="k">def</span> <span class="nf">test_5</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">b</span><span class="o">=</span><span class="n">location_series</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="s2">&quot;dt problem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;dimension problem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">len</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;len problem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">b</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;data problem&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="data_types_Test.test_6"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_6">[docs]</a>    <span class="k">def</span> <span class="nf">test_6</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">a</span><span class="o">=</span><span class="n">location_series</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">3</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">get_init_loc</span><span class="p">()</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;get_init_loc() problem&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">get_init_loc</span><span class="p">()</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;get_last_loc() problem&quot;</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">exit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Author
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

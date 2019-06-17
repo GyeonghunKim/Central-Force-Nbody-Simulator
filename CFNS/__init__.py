@@ -4,4 +4,4 @@ Central Force N-Body Simulator
 계산과학 이론 및 실습 1 프로젝트로 제작되었습니다.
 """
 
-__version__ = '1.0'
+__version__ = '2.0'

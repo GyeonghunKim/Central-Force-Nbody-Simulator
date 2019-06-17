@@ -1,0 +1,408 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CFNS.particles &mdash; Central Force N-body Simulator in Python 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Central Force N-body Simulator in Python
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../CFNS.html">CFNS package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Central Force N-body Simulator in Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>CFNS.particles</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for CFNS.particles</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">data_types</span> <span class="k">import</span> <span class="n">location_series</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="c1"># 입자 하나를 나타내는 클래스입니다. 앞에서 만든 location_series와 속도, 질량을 원소로 합니다.</span>
+<div class="viewcode-block" id="particle"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.particle">[docs]</a><span class="k">class</span> <span class="nc">particle</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;입자 하나를 나타내는 클래스입니다. 위치와 속도 그리고 질량에 대한 정보를 가지고 있습니다.</span>
+<span class="sd">    위치에 대해서는 앞의 location series 형태로 데이터를 저장하고 속도와 질량은 실수형으로 가집니다. </span>
+<span class="sd">    일반적으로 setup class의 원소로 사용되는 클래스로, 직접 particle class의 인스턴스를 선언할 일은 없습니다. </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">vel</span><span class="p">):</span> <span class="c1">#dt: 시간 간격, dim: 차원, mass: 질량, loc: 초기 위치, vel: 초기 속도 입니다.</span>
+        <span class="sd">&#39;&#39;&#39; particle class의 constructor입니다. </span>
+<span class="sd">        :param float dt: 입자가 움직이는 궤적을 계산할 때 사용되는 시간 간격입니다. </span>
+<span class="sd">        :param int dim: 입자가 움직이는 공간의 차원입니다. </span>
+<span class="sd">        :param float mass: 입자의 질량입니다. </span>
+<span class="sd">        :param numpy array loc: 입자의 초기 위치입니다. </span>
+<span class="sd">        :param numpy array vel: 입자의 초기 속력입니다.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="n">mass</span> <span class="c1">#질량을 설정해줍니다.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location_series</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">dim</span><span class="p">,</span> <span class="n">loc</span><span class="p">)</span> <span class="c1">#초기 위치와 차원, 시간 간격을 기반으로 location series를 만들어 줍니다. </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">vel</span> <span class="c1">#초기 속도를 설정해줍니다.</span>
+
+
+<div class="viewcode-block" id="particle.print_info"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.particle.print_info">[docs]</a>    <span class="k">def</span> <span class="nf">print_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; 입자에 대한 정보를 출력합니다. #질량, 초기 위치, 초기 속도를 출력합니다.&#39;&#39;&#39;</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">get_init_loc</span><span class="p">()</span> <span class="c1">#해당 입자의 초기 위치가 list 형식으로 나옵니다.</span>
+        <span class="c1"># 차원에 따라 출력하는 메시지를 분류했습니다.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1">#입자가 1차원 벡터일 때</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mass : &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="s2">&quot;kg</span><span class="se">\n</span><span class="s2">Initial location : X coordinate =&quot;</span><span class="p">,</span> <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Initial Velocity : &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span><span class="s2">&quot;m/s&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span> <span class="c1">#입자가 2차원 벡터일 때</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mass : &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="s2">&quot;kg</span><span class="se">\n</span><span class="s2">Initial location : X coordinate =&quot;</span><span class="p">,</span> <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+                    <span class="s2">&quot;, Y coordinate =&quot;</span><span class="p">,</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Initial Velocity : &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span><span class="s2">&quot;m/s&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span> <span class="c1">#입자가 3차원 벡터일 때</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mass : &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="s2">&quot;kg</span><span class="se">\n</span><span class="s2">Initial location : X coordinate =&quot;</span><span class="p">,</span> <span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
+            <span class="s2">&quot;, Y coordinate =&quot;</span><span class="p">,</span> <span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="s2">&quot;, Z coordinate =&quot;</span><span class="p">,</span><span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Initial Velocity : &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span><span class="s2">&quot;m/s&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1">#len(vec) &gt;= 4; 입자가 4차원 이상의 벡터일 때</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mass : &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="s2">&quot;kg</span><span class="se">\n</span><span class="s2">Initial location : &quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">th coordinate = </span><span class="si">{}</span><span class="s2">, &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="c1">#(1st, 2nd, 3rd가 편의상 1st, 2st, 3st로 출력됩니다.)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Initial Velocity : &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span><span class="s2">&quot;m/s&quot;</span><span class="p">)</span></div>
+        <span class="c1">#위치 벡터의 각 좌표를 출력합니다.</span>
+
+    
+<div class="viewcode-block" id="particle.set_velocity"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.particle.set_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">set_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vel</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; 입자의 기존 속도를 새로운 속도로 바꾸어 줍니다. </span>
+<span class="sd">        :param numpy array vel: 갱신할 속도입니다. </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">vel</span></div></div>
+
+<div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.setup">[docs]</a><span class="k">class</span> <span class="nc">setup</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    시뮬레이션의 셋업을 나타내는 클래스입니다. 초기 조건이 설정 된 입자들을 클래스로 가집니다. </span>
+<span class="sd">    기존의 입자 클래스는 이 클래스 안에서 불러와 지게 됩니다. 이는 입자들 마다 시간 간격(dt)이나 차원이 달라지는 것을 막기 위함입니다. </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">dim</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; setup class의 constructor입니다. </span>
+<span class="sd">        :param float dt: 입자가 움직이는 궤적을 계산할 때 사용되는 시간 간격입니다. </span>
+<span class="sd">        :param int dim: 입자가 움직이는 공간의 차원입니다. </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span> <span class="c1">#시간 간격</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span> <span class="c1">#차원</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">particles</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#입자들이 저장될 빈 list를 만들어줍니다.</span>
+
+    <span class="c1"># 입자를 추가합니다.</span>
+<div class="viewcode-block" id="setup.add_particle"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.setup.add_particle">[docs]</a>    <span class="k">def</span> <span class="nf">add_particle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">vel</span><span class="p">):</span> <span class="c1">#질량, 위치, 속도를 정해줍니다.</span>
+        <span class="sd">&#39;&#39;&#39; setup에 입자를 추가하는 메소드입니다. </span>
+<span class="sd">        :param float mass: 입자가 움직이는 궤적을 계산할 때 사용되는 시간 간격입니다. </span>
+<span class="sd">        :param numpy array loc: 입자의 초기 위치 입니다. </span>
+<span class="sd">        :param numpy array vel: 입자의 초기 속력 입니다.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">particle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">vel</span><span class="p">)</span> <span class="c1">#처음 setup에서 정해준 dt와 dim을 갖는 입자를 생성합니다.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="c1">#particles list에 입자를 추가합니다.</span></div>
+
+    <span class="c1"># 입자를 하나 지웁니다. particles list에서 number번째(index는 number-1) 입자를 지웁니다.</span>
+<div class="viewcode-block" id="setup.delete_particle"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.setup.delete_particle">[docs]</a>    <span class="k">def</span> <span class="nf">delete_particle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; setup에서 입자를 지우는 메소드입니다. </span>
+<span class="sd">        :param int number: 지울 입자의 번호입니다. 입자의 번호는 이하의 print_list메소드를 이용하여 확인할 수 있습니다.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">number</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="setup.getNparticle"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.setup.getNparticle">[docs]</a>    <span class="k">def</span> <span class="nf">getNparticle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; 총 입자의 수를 반환하는 메소드입니다. &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="setup.getvelocities"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.setup.getvelocities">[docs]</a>    <span class="k">def</span> <span class="nf">getvelocities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; 입자의 속력으로 구성된 numpy array를 반환하는 메소드입니다.</span>
+<span class="sd">        입자가 세 개 들어있고, 각각의 속력이 [10, 2, 1], [2, 1, 12], [3, 21, 1]이라면, [[10, 2, 1], [2, 1, 12], [3, 21, 1]]를 반환합니다. </span>
+<span class="sd">        &#39;&#39;&#39;</span> 
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">particle</span><span class="o">.</span><span class="n">velocity</span> <span class="k">for</span> <span class="n">particle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="setup.setvelocities"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.setup.setvelocities">[docs]</a>    <span class="k">def</span> <span class="nf">setvelocities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">velocities</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;입자들의 속도를 일괄적으로 갱신하는 메소드 입니다. </span>
+<span class="sd">        입자가 3개 일 때, velocity parameter가 [[10, 2, 1], [2, 1, 12], [3, 21, 1]]와 같이 들어오면</span>
+<span class="sd">        입자 0의 속력은 [10, 2, 1]으로 갱신되고, 입자 1은 [2, 1, 12], 입자 3은 [3, 21, 1]으로 갱신됩니다. </span>
+<span class="sd">        :param numpy array velocities: 갱신 될 속력</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">particle</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="p">):</span>
+            <span class="n">particle</span><span class="o">.</span><span class="n">set_velocity</span><span class="p">(</span><span class="n">velocities</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="setup.getlastloc"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.setup.getlastloc">[docs]</a>    <span class="k">def</span> <span class="nf">getlastloc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;입자들의 마지막 위치들로 구성 된 numpy array가 반환되는 메소드 입니다. </span>
+<span class="sd">        입자가 세 개이고, 각각의 location series의 마지막 원소가 [10, 2, 1], [2, 1, 12], [3, 21, 1]이라면, </span>
+<span class="sd">        [[10, 2, 1], [2, 1, 12], [3, 21, 1]]이 반환됩니다. </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">particle</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">get_last_loc</span><span class="p">()</span> <span class="k">for</span> <span class="n">particle</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="setup.appendloc"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.setup.appendloc">[docs]</a>    <span class="k">def</span> <span class="nf">appendloc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;입자들의 위치를 일괄적으로 추가하는 메소드 입니다, </span>
+<span class="sd">        입자가 3개 일 때, loc parameter가 [[10, 2, 1], [2, 1, 12], [3, 21, 1]]와 같이 들어오면</span>
+<span class="sd">        입자 0의 location series에는 [10, 2, 1]가 append되고, 입자 1에는 [2, 1, 12], 입자 3에는 [3, 21, 1]이 append 됩니다. </span>
+<span class="sd">        :param numpy array loc: 갱신 될 위치</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">particle</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="p">):</span>
+            <span class="n">particle</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="setup.print_list"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.setup.print_list">[docs]</a>    <span class="k">def</span> <span class="nf">print_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;입자들의 일련번호와 정보를 출력하는 메소드 입니다. </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ptl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;particle number:&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">ptl</span><span class="o">.</span><span class="n">print_info</span><span class="p">()</span> <span class="c1">#partcles에 있는 각 입자들에 대해서 질량, 초기 위치, 초기 속도가 출력됩니다.</span></div>
+
+    <span class="c1"># 입자들의 현재 위치를 좌표평면에 표시하고 각 입자의 현재 속도를 화살표로 나타냅니다.</span>
+    <span class="c1"># 2차원 벡터에 대해서만 가능합니다.</span>
+<div class="viewcode-block" id="setup.print_particles"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.setup.print_particles">[docs]</a>    <span class="k">def</span> <span class="nf">print_particles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;입자들의 초기 상태를 가시화 해주는 메소드입니다. </span>
+<span class="sd">        입자들의 위치를 점으로, 초기 속력을 화살표로 표현해줍니다. </span>
+<span class="sd">        3차원에서는 효과적인 가시화가 되지 않아서 2차원에서만 지원하도록 만들었습니다. </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;We only support this method for 2D setup&quot;</span><span class="p">)</span>
+
+        <span class="c1">#quiver 함수를 쓰기 위해 x좌표벡터, y좌표벡터, x방향벡터, y방향벡터를 생성합니다.</span>
+        <span class="c1">#좌표 벡터 생성.</span>
+        <span class="n">x_pos</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#각 입자(위치 벡터)의 x좌표끼리 모아놓을 빈 list입니다. x_position.</span>
+        <span class="n">y_pos</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#각 입자(위치 벡터)의 y좌표끼리 모아놓을 빈 list입니다.</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="p">)):</span> <span class="c1">#particles에 들어있는 입자 개수만큼 반복합니다.</span>
+            <span class="n">xy_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">get_last_loc</span><span class="p">()</span> <span class="c1">##각 입자의 마지막 위치(곧 현재 위치)가 [x,y]의 형태로 저장됩니다.</span>
+            <span class="n">x_pos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xy_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="c1">#x좌표를 x_pos에 추가합니다.</span>
+            <span class="n">y_pos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xy_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="c1">#y좌표를 y_pos에 추가합니다.</span>
+        <span class="c1">#print(x_pos, y_pos)</span>
+
+        <span class="c1">#방향 벡터 생성.</span>
+        <span class="n">x_direct</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#각 입자의 속도벡터의 x좌표끼리 모아놓을 빈 list입니다. x_direction.</span>
+        <span class="n">y_direct</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#각 입자의 속도벡터의 y좌표끼리 모아놓을 빈 list입니다.</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="p">)):</span> <span class="c1">#particles에 들어있는 입자 개수만큼 반복합니다.</span>
+            <span class="n">xy_direct</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">velocity</span> <span class="c1">#각 입자의 속도벡터가 [x,y]의 형태로 저장됩니다.</span>
+            <span class="n">x_direct</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xy_direct</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="c1">#x방향을 x_direct에 추가합니다.</span>
+            <span class="n">y_direct</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xy_direct</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="c1">#y방향을 y_direct에 추가합니다.</span>
+        <span class="c1">#print(x_direct, y_direct)</span>
+
+        <span class="c1">#quiver함수로 각 입자의 위치와 속도를 표시합니다.</span>
+        <span class="n">fig_quiver</span><span class="p">,</span> <span class="n">ax_quiver</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">ax_quiver</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">x_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">x_direct</span><span class="p">,</span> <span class="n">y_direct</span><span class="p">)</span><span class="c1">#, scale = 0.1) #scale을 조정할 수 있습니다.</span>
+        <span class="n">ax_quiver</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">])</span> <span class="c1">#좌표평면에 나타나는 x축, y축 범위를 조정할 수 있습니다.</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span> <span class="c1">#화면에 plot을 띄웁니다.</span></div></div>
+
+<div class="viewcode-block" id="TestParticleSetup"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.TestParticleSetup">[docs]</a><span class="k">class</span> <span class="nc">TestParticleSetup</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span> 
+    <span class="sd">&quot;&quot;&quot; Particle class와 setup class를 테스트 하기 위한 unittest class입니다. &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TestParticleSetup.test_particle"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.TestParticleSetup.test_particle">[docs]</a>    <span class="k">def</span> <span class="nf">test_particle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">particle1</span> <span class="o">=</span> <span class="n">particle</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">particle1</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;particle mass has a problem.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">particle1</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s2">&quot;location dt has a problem.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">particle1</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;location dim has a problem.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">particle1</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="p">,</span> <span class="s2">&quot;location data has a problem.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">particle1</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="s2">&quot;particle velocity has a problem.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">particle1</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">==</span> <span class="n">particle1</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="s2">&quot;particle dimension has a problem.&quot;</span><span class="p">)</span> <span class="c1">#입력된 차원만큼 벡터가 입력되었는지 확인.</span></div>
+
+    <span class="c1">#속도 설정 테스트.</span>
+<div class="viewcode-block" id="TestParticleSetup.test_set_velocity"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.TestParticleSetup.test_set_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">test_set_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">particle1</span> <span class="o">=</span> <span class="n">particle</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">particle1</span><span class="o">.</span><span class="n">set_velocity</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">particle1</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;particle velocity has a problem.&quot;</span><span class="p">)</span> <span class="c1">#속도가 제대로 입력되는지 확인.</span></div>
+
+    <span class="c1">#setup 클래스 테스트.</span>
+<div class="viewcode-block" id="TestParticleSetup.test_setup"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.TestParticleSetup.test_setup">[docs]</a>    <span class="k">def</span> <span class="nf">test_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">setup1</span> <span class="o">=</span> <span class="n">setup</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">setup1</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s2">&quot;particle dt has a problem.&quot;</span><span class="p">)</span> <span class="c1">#dt 확인.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">setup1</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;particle dimension has a problem.&quot;</span><span class="p">)</span> <span class="c1">#dim 확인.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">setup1</span><span class="o">.</span><span class="n">particles</span><span class="p">,</span> <span class="p">[],</span> <span class="s2">&quot;particles list has a problem.&quot;</span><span class="p">)</span> <span class="c1">#particles 확인.</span></div>
+
+    <span class="c1">#입자 추가 테스트.</span>
+<div class="viewcode-block" id="TestParticleSetup.test_add_particle"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.TestParticleSetup.test_add_particle">[docs]</a>    <span class="k">def</span> <span class="nf">test_add_particle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">setup1</span> <span class="o">=</span> <span class="n">setup</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">particle</span><span class="p">(</span><span class="n">setup1</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span> <span class="n">setup1</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">setup1</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">setup1</span><span class="o">.</span><span class="n">particles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">tmp</span><span class="p">,</span> <span class="s2">&quot;the particle is not added properly.&quot;</span><span class="p">)</span> <span class="c1">#tmp가 particles 리스트에 추가되었는지 확인.</span></div>
+
+    <span class="c1">#입자 삭제 테스트.</span>
+<div class="viewcode-block" id="TestParticleSetup.test_delete_particle"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.TestParticleSetup.test_delete_particle">[docs]</a>    <span class="k">def</span> <span class="nf">test_delete_particle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">setup1</span> <span class="o">=</span> <span class="n">setup</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">particle</span><span class="p">(</span><span class="n">setup1</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span> <span class="n">setup1</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">setup1</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="c1">#삭제하기 위한 입자 추가</span>
+        <span class="n">setup1</span><span class="o">.</span><span class="n">delete_particle</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">setup1</span><span class="o">.</span><span class="n">particles</span><span class="o">==</span><span class="p">[],</span> <span class="s2">&quot;the particle is not deleted properly.&quot;</span><span class="p">)</span> <span class="c1">#입자(tmp)가 삭제되었는지 확인.</span></div>
+
+    <span class="c1">#입자 수 테스트.</span>
+<div class="viewcode-block" id="TestParticleSetup.test_getNparticle"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.TestParticleSetup.test_getNparticle">[docs]</a>    <span class="k">def</span> <span class="nf">test_getNparticle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">setup1</span> <span class="o">=</span> <span class="n">setup</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">particle</span><span class="p">(</span><span class="n">setup1</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span> <span class="n">setup1</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">setup1</span><span class="o">.</span><span class="n">particles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="c1">#현재 입자 수 1개</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">setup1</span><span class="o">.</span><span class="n">getNparticle</span><span class="p">()</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;the number of particles has a problem.&quot;</span><span class="p">)</span> <span class="c1">#입자 수가 제대로 반환되는지 확인.</span></div>
+
+    <span class="c1">#입자 속도 테스트.</span>
+<div class="viewcode-block" id="TestParticleSetup.test_getvelocities"><a class="viewcode-back" href="../../CFNS.particles.html#CFNS.particles.TestParticleSetup.test_getvelocities">[docs]</a>    <span class="k">def</span> <span class="nf">test_getvelocities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">setup1</span> <span class="o">=</span> <span class="n">setup</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">setup1</span><span class="o">.</span><span class="n">add_particle</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+        <span class="n">setup1</span><span class="o">.</span><span class="n">add_particle</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span> <span class="c1">#두 개의 입자를 추가함.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">setup1</span><span class="o">.</span><span class="n">getvelocities</span><span class="p">()</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">]]))</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;the list of particle velocity has a problem.&quot;</span><span class="p">)</span> <span class="c1">#두 입자의 속도가 제대로 반환되는지 확인.</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">exit</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Author
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
