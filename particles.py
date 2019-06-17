@@ -5,30 +5,42 @@ import unittest
 
 # 입자 하나를 나타내는 클래스입니다. 앞에서 만든 location_series와 속도, 질량을 원소로 합니다.
 class particle:
+    '''입자 하나를 나타내는 클래스입니다. 위치와 속도 그리고 질량에 대한 정보를 가지고 있습니다.
+    위치에 대해서는 앞의 location series 형태로 데이터를 저장하고 속도와 질량은 실수형으로 가집니다. 
+    일반적으로 setup class의 원소로 사용되는 클래스로, 직접 particle class의 인스턴스를 선언할 일은 없습니다. 
+    '''
     def __init__(self, dt, dim, mass, loc, vel): #dt: 시간 간격, dim: 차원, mass: 질량, loc: 초기 위치, vel: 초기 속도 입니다.
+        ''' Constructor of the particle class
+        :param float dt: time step for the particle movements
+        :param int dim: dimension of the particle lives
+        :param float mass: mass of the particle
+        :param float loc: initial location for the particle
+        :param float vel: initial velocity for the particle
+        '''
         self.mass = mass #질량을 설정해줍니다.
         self.location = location_series((dt, dim, loc))
         self.velocity = vel #초기 속도를 설정해줍니다.
 
-        # 입자에 대한 정보를 출력합니다. #질량, 초기 위치, 초기 속도를 출력합니다.
+
+    # 입자에 대한 정보를 출력합니다. #질량, 초기 위치, 초기 속도를 출력합니다.
     def print_info(self):
-            vec = self.location.get_init_loc() #해당 입자의 초기 위치가 list 형식으로 나옵니다.
-            # 차원에 따라 출력하는 메시지를 분류했습니다.
-            if len(vec) == 1: #입자가 1차원 벡터일 때
-                print("Mass : ", self.mass, "kg\nInitial location : X coordinate =", vec[0],\
-                      "\nInitial Velocity : ", self.velocity,"m/s")
-            elif len(vec) == 2: #입자가 2차원 벡터일 때
-                print("Mass : ", self.mass, "kg\nInitial location : X coordinate =", vec[0],\
-                      ", Y coordinate =", vec[1],"\nInitial Velocity : ", self.velocity,"m/s")
-            elif len(vec) == 3: #입자가 3차원 벡터일 때
-                print("Mass : ", self.mass, "kg\nInitial location : X coordinate =", vec[0],\
-                ", Y coordinate =", vec[1],", Z coordinate =",vec[2],"\nInitial Velocity : ", self.velocity,"m/s")
-            else: #len(vec) >= 4; 입자가 4차원 이상의 벡터일 때
-                print("Mass : ", self.mass, "kg\nInitial location : ", end="")
-                for i, value in enumerate(vec, start=1):
-                    print("{}th coordinate = {}, ".format(i, value), end="") #(1st, 2nd, 3rd가 편의상 1st, 2st, 3st로 출력됩니다.)
-                print("\nInitial Velocity : ", self.velocity,"m/s")
-            #위치 벡터의 각 좌표를 출력합니다.
+        vec = self.location.get_init_loc() #해당 입자의 초기 위치가 list 형식으로 나옵니다.
+        # 차원에 따라 출력하는 메시지를 분류했습니다.
+        if len(vec) == 1: #입자가 1차원 벡터일 때
+            print("Mass : ", self.mass, "kg\nInitial location : X coordinate =", vec[0],\
+                    "\nInitial Velocity : ", self.velocity,"m/s")
+        elif len(vec) == 2: #입자가 2차원 벡터일 때
+            print("Mass : ", self.mass, "kg\nInitial location : X coordinate =", vec[0],\
+                    ", Y coordinate =", vec[1],"\nInitial Velocity : ", self.velocity,"m/s")
+        elif len(vec) == 3: #입자가 3차원 벡터일 때
+            print("Mass : ", self.mass, "kg\nInitial location : X coordinate =", vec[0],\
+            ", Y coordinate =", vec[1],", Z coordinate =",vec[2],"\nInitial Velocity : ", self.velocity,"m/s")
+        else: #len(vec) >= 4; 입자가 4차원 이상의 벡터일 때
+            print("Mass : ", self.mass, "kg\nInitial location : ", end="")
+            for i, value in enumerate(vec, start=1):
+                print("{}th coordinate = {}, ".format(i, value), end="") #(1st, 2nd, 3rd가 편의상 1st, 2st, 3st로 출력됩니다.)
+            print("\nInitial Velocity : ", self.velocity,"m/s")
+        #위치 벡터의 각 좌표를 출력합니다.
 
     #새로운 속도를 설정해줍니다.
     def set_velocity(self, vel):
