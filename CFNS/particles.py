@@ -161,6 +161,7 @@ class setup:
 class TestParticleSetup(unittest.TestCase): 
     """ Particle class와 setup class를 테스트 하기 위한 unittest class입니다. """
     def test_particle(self):
+        """ particle 클래스 인스턴스가 정상적으로 만들어지는지 확인합니다. """
         particle1 = particle(0.01, 3, 10, [0,1,-1], [-3,4,5])
         self.assertEqual(particle1.mass, 10, "particle mass has a problem.")
         self.assertEqual(particle1.location.dt, 0.01, "location dt has a problem.")
@@ -171,12 +172,14 @@ class TestParticleSetup(unittest.TestCase):
 
     #속도 설정 테스트.
     def test_set_velocity(self):
+        """ particle 클래스 set_velocity 메소드가 정상적으로 만들어지는지 확인합니다. """
         particle1 = particle(0.01, 3, 10, [1,2,3], [-3,4,5])
         particle1.set_velocity([3,-6,1])
         self.assertEqual(particle1.velocity, [3,-6,1], "particle velocity has a problem.") #속도가 제대로 입력되는지 확인.
 
     #setup 클래스 테스트.
     def test_setup(self):
+        """ setup 클래스 인스턴스가 정상적으로 만들어지는지 확인합니다. """
         setup1 = setup(0.01, 3)
         self.assertEqual(setup1.dt, 0.01, "particle dt has a problem.") #dt 확인.
         self.assertEqual(setup1.dim, 3, "particle dimension has a problem.") #dim 확인.
@@ -184,21 +187,25 @@ class TestParticleSetup(unittest.TestCase):
 
     #입자 추가 테스트.
     def test_add_particle(self):
+        """ setup 클래스 인스턴스에 particle추가하는게 잘 되는지 확인합니다.  """
         setup1 = setup(0.01, 3)
         tmp = particle(setup1.dt, setup1.dim, 10, [1,2,3], [-1,-3,5])
-        setup1.particles.append(tmp)
-        self.assertTrue(setup1.particles[0]==tmp, "the particle is not added properly.") #tmp가 particles 리스트에 추가되었는지 확인.
+        setup1.add_particle(10, [1,2,3], [-1,-3,5])
+        self.assertTrue(setup1.particles[0].mass == tmp.mass, "the particle is not added properly 1.") #tmp가 particles 리스트에 추가되었는지 확인.
+        self.assertTrue((setup1.particles[0].location.get_init_loc() == tmp.location.get_init_loc()).all(), "the particle is not added properly 2.") #tmp가 particles 리스트에 추가되었는지 확인.
+        self.assertTrue(setup1.particles[0].velocity == tmp.velocity, "the particle is not added properly 3.") #tmp가 particles 리스트에 추가되었는지 확인.
 
     #입자 삭제 테스트.
     def test_delete_particle(self):
+        """ setup 클래스 인스턴스에 particle삭제하는게 잘 되는지 확인합니다.  """
         setup1 = setup(0.01, 3)
-        tmp = particle(setup1.dt, setup1.dim, 10, [1,2,3], [-1,-3,5])
-        setup1.particles.append(tmp) #삭제하기 위한 입자 추가
+        setup1.add_particle(10, [1,2,3], [-1,-3,5]) #삭제하기 위한 입자 추가
         setup1.delete_particle(1)
         self.assertTrue(setup1.particles==[], "the particle is not deleted properly.") #입자(tmp)가 삭제되었는지 확인.
 
     #입자 수 테스트.
     def test_getNparticle(self):
+        """ setup 클래스 getNparticle()이 잘 작동하는지 확인합니다.  """
         setup1 = setup(0.01, 3)
         tmp = particle(setup1.dt, setup1.dim, 10, [1,2,3], [-1,-3,5])
         setup1.particles.append(tmp) #현재 입자 수 1개
@@ -206,6 +213,7 @@ class TestParticleSetup(unittest.TestCase):
 
     #입자 속도 테스트.
     def test_getvelocities(self):
+        """ setup 클래스 getvelocities()가 잘 작동하는지 확인합니다.  """
         setup1 = setup(0.01, 3)
         setup1.add_particle(0.01, [0,1,-1], [-3,4,5])
         setup1.add_particle(0.01, [0,1,-1], [1,-6,2]) #두 개의 입자를 추가함.

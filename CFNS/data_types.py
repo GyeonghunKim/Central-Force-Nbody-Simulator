@@ -93,28 +93,36 @@ class location_series(vector_series):
 
 class data_types_Test(unittest.TestCase):
     """ vector_series class와 location_series class를 테스트 하기 위한 unittest class입니다. """
-    def test_1(self):
+    def test_vector_series_with_initialdata(self):
+        """ vector series의 인스턴스를 만들 때 initial data와 함께 불러오는 경우 잘 되는지 확인합니다. 
+        """
         a=vector_series(3,[1,1,1])
         c=np.array([1,1,1])
         self.assertEqual(a.dim,3, "dimension problem")
         self.assertEqual(a.len,1, "len problem")
         self.assertTrue((a.data == c).all(), "data problem")
 
-    def test_2(self):
+    def test_vector_series_without_initialdata(self):
+        """ vector series의 인스턴스를 만들 때 initial data 없이 초기화하는 경우 잘 되는지 확인합니다. 
+        """
         b=vector_series(3)
         c=np.array([0,0,0])
         self.assertEqual(b.dim, 3, "dimension problem")
         self.assertEqual(b.len, 1, "len problem")
         self.assertTrue((b.data == c).all(), "data problem")
 
-    def test_3(self):
+    def test_vector_series_append(self):
+        """ vector series의 append메소드가 잘 작동하는지 확인합니다. 
+        """
         a=vector_series(3,[1,1,1])
         a.append(np.array([3,4,5]))
         c=[np.array([1,1,1]), np.array([3,4,5])]
         self.assertEqual(a.len, 2, "len problem")
         self.assertTrue((np.array(a.data) == np.array(c)).all(), "data problem")
 
-    def test_4(self):
+    def test_location_series_with_initialdata(self):
+        """ location series의 인스턴스를 만들 때 initial data와 함께 불러오는 경우 잘 되는지 확인합니다. 
+        """
         a = location_series(0.1, 3, [1,1,1])
         c = np.array([1,1,1])
         self.assertEqual(a.dt,0.1,"dt problem")
@@ -122,7 +130,9 @@ class data_types_Test(unittest.TestCase):
         self.assertEqual(a.len,1, "len problem")
         self.assertTrue((a.data == c).all(), "data problem")
 
-    def test_5(self):
+    def test_location_series_without_initialdata(self):
+        """ location series의 인스턴스를 만들 때 initial data 없이 초기화하는 경우 잘 되는지 확인합니다. 
+        """
         b=location_series(0.1,3)
         c=np.array([0,0,0])
         self.assertEqual(b.dt,0.1,"dt problem")
@@ -130,10 +140,12 @@ class data_types_Test(unittest.TestCase):
         self.assertEqual(b.len,1, "len problem")
         self.assertTrue((b.data == c).all(), "data problem")
 
-    def test_6(self):
+    def test_location_series_init_loc_and_last_loc(self):
+        """ location series의 get_init_loc()과 get_last_loc()이 잘 작동하는지 확인합니다. 
+        """
         a=location_series(0.1,3,[1,1,1])
         self.assertTrue((a.get_init_loc()==np.array([1,1,1])).all(), "get_init_loc() problem")
-        self.assertTrue((a.get_init_loc()==np.array([1,1,1])).all(), "get_last_loc() problem")
+        self.assertTrue((a.get_last_loc()==np.array([1,1,1])).all(), "get_last_loc() problem")
 
 
 if __name__=="__main__":

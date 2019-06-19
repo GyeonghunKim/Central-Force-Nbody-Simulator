@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CFNS.data_types module &mdash; Central Force N-body Simulator in Python 1.0 documentation</title>
+  <title>CFNS.data_types module &mdash; Central Force N-body Simulator in Python 2.0 documentation</title>
   
 
   
@@ -60,7 +60,7 @@
             
             
               <div class="version">
-                1.0
+                2.0
               </div>
             
           
@@ -213,34 +213,40 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
 <p>vector_series class와 location_series class를 테스트 하기 위한 unittest class입니다.</p>
 <dl class="method">
-<dt id="CFNS.data_types.data_types_Test.test_1">
-<code class="descname">test_1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/data_types.html#data_types_Test.test_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.data_types.data_types_Test.test_1" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="CFNS.data_types.data_types_Test.test_vector_series_with_initialdata">
+<code class="descname">test_vector_series_with_initialdata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/data_types.html#data_types_Test.test_vector_series_with_initialdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.data_types.data_types_Test.test_vector_series_with_initialdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>vector series의 인스턴스를 만들 때 initial data와 함께 불러오는 경우 잘 되는지 확인합니다.</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="CFNS.data_types.data_types_Test.test_2">
-<code class="descname">test_2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/data_types.html#data_types_Test.test_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.data_types.data_types_Test.test_2" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="CFNS.data_types.data_types_Test.test_vector_series_without_initialdata">
+<code class="descname">test_vector_series_without_initialdata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/data_types.html#data_types_Test.test_vector_series_without_initialdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.data_types.data_types_Test.test_vector_series_without_initialdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>vector series의 인스턴스를 만들 때 initial data 없이 초기화하는 경우 잘 되는지 확인합니다.</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="CFNS.data_types.data_types_Test.test_3">
-<code class="descname">test_3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/data_types.html#data_types_Test.test_3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.data_types.data_types_Test.test_3" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="CFNS.data_types.data_types_Test.test_vector_series_append">
+<code class="descname">test_vector_series_append</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/data_types.html#data_types_Test.test_vector_series_append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.data_types.data_types_Test.test_vector_series_append" title="Permalink to this definition">¶</a></dt>
+<dd><p>vector series의 append메소드가 잘 작동하는지 확인합니다.</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="CFNS.data_types.data_types_Test.test_4">
-<code class="descname">test_4</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/data_types.html#data_types_Test.test_4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.data_types.data_types_Test.test_4" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="CFNS.data_types.data_types_Test.test_location_series_with_initialdata">
+<code class="descname">test_location_series_with_initialdata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/data_types.html#data_types_Test.test_location_series_with_initialdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.data_types.data_types_Test.test_location_series_with_initialdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>location series의 인스턴스를 만들 때 initial data와 함께 불러오는 경우 잘 되는지 확인합니다.</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="CFNS.data_types.data_types_Test.test_5">
-<code class="descname">test_5</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/data_types.html#data_types_Test.test_5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.data_types.data_types_Test.test_5" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="CFNS.data_types.data_types_Test.test_location_series_without_initialdata">
+<code class="descname">test_location_series_without_initialdata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/data_types.html#data_types_Test.test_location_series_without_initialdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.data_types.data_types_Test.test_location_series_without_initialdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>location series의 인스턴스를 만들 때 initial data 없이 초기화하는 경우 잘 되는지 확인합니다.</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="CFNS.data_types.data_types_Test.test_6">
-<code class="descname">test_6</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/data_types.html#data_types_Test.test_6"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.data_types.data_types_Test.test_6" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="CFNS.data_types.data_types_Test.test_location_series_init_loc_and_last_loc">
+<code class="descname">test_location_series_init_loc_and_last_loc</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/data_types.html#data_types_Test.test_location_series_init_loc_and_last_loc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.data_types.data_types_Test.test_location_series_init_loc_and_last_loc" title="Permalink to this definition">¶</a></dt>
+<dd><p>location series의 get_init_loc()과 get_last_loc()이 잘 작동하는지 확인합니다.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -266,7 +272,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Author
+        &copy; Copyright 2019, 구승연, 김경훈, 이승이
 
     </p>
   </div>

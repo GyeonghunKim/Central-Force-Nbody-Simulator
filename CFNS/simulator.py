@@ -175,53 +175,76 @@ class simulator:
         """ 3차원 가시화를 위해서 사용합니다. 
         :param bool projection: True일 경우 각 평면에 사영된 경로도 같이 출력합니다. defalult 는 False
         """
-        fig=plt.figure()
-        ax=fig.add_subplot(111,projection='3d')
-        x = [0 for i in range(self.N_ptl)]
-        y = [0 for i in range(self.N_ptl)]
-        z = [0 for i in range(self.N_ptl)]
-        cmap = [0 for i in range(self.N_ptl)]
-        for i in range(self.N_ptl):
-            x[i] = [d[0] for d in self.setup.particles[i].location.data]
-            y[i] = [d[1] for d in self.setup.particles[i].location.data]
-            z[i] = [d[2] for d in self.setup.particles[i].location.data]
-            sc = ax.scatter(x[i],y[i],z[i])
-            cmap[i] = sc.get_facecolor()
-        if projection:
+        #2차원 벡터인 경우
+        if self.setup.dim == 2:
+            fig=plt.figure() #plot을 생성합니다.
+            ax=fig.add_subplot(111) 
+            x = [0 for i in range(self.N_ptl)] #x는 각 입자의 x좌표들의 리스트로 구성합니다; [[각 입자의 x좌표들]]
+            y = [0 for i in range(self.N_ptl)] #y는 각 입자의 y좌표들의 리스트로 구성합니다; [[각 입자의 y좌표들]]
+            cmap = [0 for i in range(self.N_ptl)] #각 입자에 지정할 색깔을 위해 colopmap 리스트를 생성합니다.
             for i in range(self.N_ptl):
-                xflat = np.full_like(x[i], min(ax.get_xlim()))
-                yflat = np.full_like(y[i], max(ax.get_ylim()))
-                zflat = np.full_like(z[i], min(ax.get_zlim()))
+                x[i] = [d[0] for d in self.setup.particles[i].location.data] #각 입자의 시간에 따른 x좌표들을 저장합니다.
+                y[i] = [d[1] for d in self.setup.particles[i].location.data] #각 입자의 시간에 따른 y좌표들을 저장합니다.               
+                sc = ax.scatter(x[i],y[i]) 
+                cmap[i] = sc.get_facecolor() #각 입자에 색깔을 지정합니다. 
+                ax.scatter(x[i], y[i], c = cmap[i]) #각 입자의 시간에 따른 위치를 점으로 표시합니다.                
+            plt.show() #plot을 화면에 띄웁니다.
+            
+        #3차원인 벡터인 경우 #z좌표가 추가됩니다.
+        elif self.setup.dim == 3:
+            fig=plt.figure() #plot을 생성합니다.
+            ax=fig.add_subplot(111,projection='3d')
+            x = [0 for i in range(self.N_ptl)] 
+            y = [0 for i in range(self.N_ptl)] 
+            z = [0 for i in range(self.N_ptl)] 
+            cmap = [0 for i in range(self.N_ptl)] 
+            for i in range(self.N_ptl):
+                x[i] = [d[0] for d in self.setup.particles[i].location.data] 
+                y[i] = [d[1] for d in self.setup.particles[i].location.data] 
+                z[i] = [d[2] for d in self.setup.particles[i].location.data] 
+                sc = ax.scatter(x[i],y[i],z[i]) 
+                cmap[i] = sc.get_facecolor() 
+            if projection: #3차원 공간으로 나타냅니다.
+                for i in range(self.N_ptl):
+                    xflat = np.full_like(x[i], min(ax.get_xlim())) 
+                    yflat = np.full_like(y[i], max(ax.get_ylim()))
+                    zflat = np.full_like(z[i], min(ax.get_zlim()))
 
-                ax.scatter(xflat, y[i], z[i], c = cmap[i], alpha=0.01)
-                ax.scatter(x[i], yflat, z[i], c = cmap[i], alpha=0.01)
-                ax.scatter(x[i], y[i], zflat, c = cmap[i], alpha=0.01)
-        plt.show()
+                    ax.scatter(xflat, y[i], z[i], c = cmap[i], alpha=0.01)
+                    ax.scatter(x[i], yflat, z[i], c = cmap[i], alpha=0.01)
+                    ax.scatter(x[i], y[i], zflat, c = cmap[i], alpha=0.01)
+            plt.show() #plot을 화면에 띄웁니다.
 
 class simulator_test(unittest.TestCase):
     """ simulator class를 테스트 하기 위한 unittest class입니다. 
     """
     def setUp(self):
+        """ test에 사용할 환경을 미리 구축합니다. 
+        """
         self.table = setup(0.1, 3)
         self.table.add_particle(1, [1, 1, 0],  [0, 0, 0])
         self.table.add_particle(2, [0, 0, 0],  [0, 0, 0])
         self.table.add_particle(3, [-1, 1, 0], [0, 0, 0])
         self.sim = simulator(self.table)
 
-    # set_force 함수에서 파라미터를 잘 받는지 확인합니다.
-    def test_1(self):
+    def test_set_force_parameter(self):
+        """ set_force 함수에서 파라미터를 잘 받는지 확인합니다.
+        """
         self.sim.set_force("-G*m1*m2/(x**2)", {"G": 3})
         self.assertEqual(self.sim.force_string ,"-3*m1*m2/(x**2)", "force_string parameter works wrong")
 
-    # 내부에서 mass matrix가 잘 형성되었는지 확인합니다.
-    def test_2(self):
+    
+    def test_mass_matrix(self):
+        """내부에서 mass matrix가 잘 형성되었는지 확인합니다.
+        """
         self.sim.exec(1)
         self.assertTrue((self.sim.mass ==
                         np.array([np.ones(3)*(i+1) for i in range(3)])).all(),
                         "mass matrix is wrong parameter works wrong")
 
-    # 상호작용이 없는 경우 잘 움직이는지 확인했습니다.
-    def test_3(self):
+    def test_without_interaction(self):
+        """ 상호작용이 없는 경우 잘 움직이는지 확인했습니다.
+        """
         table2 = setup(0.1, 3)
         table2.add_particle(10232, [1, 0, 0],  [0, 10, 0])
         table2.add_particle(234, [0, 0, 0],  [0, 10, 10])

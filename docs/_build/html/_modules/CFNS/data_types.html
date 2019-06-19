@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CFNS.data_types &mdash; Central Force N-body Simulator in Python 1.0 documentation</title>
+  <title>CFNS.data_types &mdash; Central Force N-body Simulator in Python 2.0 documentation</title>
   
 
   
@@ -58,7 +58,7 @@
             
             
               <div class="version">
-                1.0
+                2.0
               </div>
             
           
@@ -243,28 +243,36 @@
 
 <div class="viewcode-block" id="data_types_Test"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test">[docs]</a><span class="k">class</span> <span class="nc">data_types_Test</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; vector_series class와 location_series class를 테스트 하기 위한 unittest class입니다. &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="data_types_Test.test_1"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_1">[docs]</a>    <span class="k">def</span> <span class="nf">test_1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="data_types_Test.test_vector_series_with_initialdata"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_vector_series_with_initialdata">[docs]</a>    <span class="k">def</span> <span class="nf">test_vector_series_with_initialdata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; vector series의 인스턴스를 만들 때 initial data와 함께 불러오는 경우 잘 되는지 확인합니다. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span><span class="o">=</span><span class="n">vector_series</span><span class="p">(</span><span class="mi">3</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;dimension problem&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">len</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;len problem&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;data problem&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="data_types_Test.test_2"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_2">[docs]</a>    <span class="k">def</span> <span class="nf">test_2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="data_types_Test.test_vector_series_without_initialdata"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_vector_series_without_initialdata">[docs]</a>    <span class="k">def</span> <span class="nf">test_vector_series_without_initialdata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; vector series의 인스턴스를 만들 때 initial data 없이 초기화하는 경우 잘 되는지 확인합니다. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">b</span><span class="o">=</span><span class="n">vector_series</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
         <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">dim</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;dimension problem&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">len</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;len problem&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">b</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;data problem&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="data_types_Test.test_3"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_3">[docs]</a>    <span class="k">def</span> <span class="nf">test_3</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="data_types_Test.test_vector_series_append"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_vector_series_append">[docs]</a>    <span class="k">def</span> <span class="nf">test_vector_series_append</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; vector series의 append메소드가 잘 작동하는지 확인합니다. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span><span class="o">=</span><span class="n">vector_series</span><span class="p">(</span><span class="mi">3</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]))</span>
         <span class="n">c</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">len</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;len problem&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">c</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;data problem&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="data_types_Test.test_4"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_4">[docs]</a>    <span class="k">def</span> <span class="nf">test_4</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="data_types_Test.test_location_series_with_initialdata"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_location_series_with_initialdata">[docs]</a>    <span class="k">def</span> <span class="nf">test_location_series_with_initialdata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; location series의 인스턴스를 만들 때 initial data와 함께 불러오는 경우 잘 되는지 확인합니다. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">location_series</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="s2">&quot;dt problem&quot;</span><span class="p">)</span>
@@ -272,7 +280,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">len</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;len problem&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;data problem&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="data_types_Test.test_5"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_5">[docs]</a>    <span class="k">def</span> <span class="nf">test_5</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="data_types_Test.test_location_series_without_initialdata"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_location_series_without_initialdata">[docs]</a>    <span class="k">def</span> <span class="nf">test_location_series_without_initialdata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; location series의 인스턴스를 만들 때 initial data 없이 초기화하는 경우 잘 되는지 확인합니다. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">b</span><span class="o">=</span><span class="n">location_series</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
         <span class="n">c</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="s2">&quot;dt problem&quot;</span><span class="p">)</span>
@@ -280,10 +290,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">len</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;len problem&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">b</span><span class="o">.</span><span class="n">data</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;data problem&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="data_types_Test.test_6"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_6">[docs]</a>    <span class="k">def</span> <span class="nf">test_6</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="data_types_Test.test_location_series_init_loc_and_last_loc"><a class="viewcode-back" href="../../CFNS.data_types.html#CFNS.data_types.data_types_Test.test_location_series_init_loc_and_last_loc">[docs]</a>    <span class="k">def</span> <span class="nf">test_location_series_init_loc_and_last_loc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; location series의 get_init_loc()과 get_last_loc()이 잘 작동하는지 확인합니다. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span><span class="o">=</span><span class="n">location_series</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">3</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">get_init_loc</span><span class="p">()</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;get_init_loc() problem&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">get_init_loc</span><span class="p">()</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;get_last_loc() problem&quot;</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">get_last_loc</span><span class="p">()</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span> <span class="s2">&quot;get_last_loc() problem&quot;</span><span class="p">)</span></div></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -300,7 +312,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Author
+        &copy; Copyright 2019, 구승연, 김경훈, 이승이
 
     </p>
   </div>

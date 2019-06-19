@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CFNS.simulator module &mdash; Central Force N-body Simulator in Python 1.0 documentation</title>
+  <title>CFNS.simulator module &mdash; Central Force N-body Simulator in Python 2.0 documentation</title>
   
 
   
@@ -59,7 +59,7 @@
             
             
               <div class="version">
-                1.0
+                2.0
               </div>
             
           
@@ -219,23 +219,26 @@ simulator에서는 힘의 형태를 셋업해줄 수 있고 이를 기반으로 
 <dl class="method">
 <dt id="CFNS.simulator.simulator_test.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/simulator.html#simulator_test.setUp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.simulator.simulator_test.setUp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+<dd><p>test에 사용할 환경을 미리 구축합니다.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="CFNS.simulator.simulator_test.test_1">
-<code class="descname">test_1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/simulator.html#simulator_test.test_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.simulator.simulator_test.test_1" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="CFNS.simulator.simulator_test.test_set_force_parameter">
+<code class="descname">test_set_force_parameter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/simulator.html#simulator_test.test_set_force_parameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.simulator.simulator_test.test_set_force_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>set_force 함수에서 파라미터를 잘 받는지 확인합니다.</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="CFNS.simulator.simulator_test.test_2">
-<code class="descname">test_2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/simulator.html#simulator_test.test_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.simulator.simulator_test.test_2" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="CFNS.simulator.simulator_test.test_mass_matrix">
+<code class="descname">test_mass_matrix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/simulator.html#simulator_test.test_mass_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.simulator.simulator_test.test_mass_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>내부에서 mass matrix가 잘 형성되었는지 확인합니다.</p>
+</dd></dl>
 
 <dl class="method">
-<dt id="CFNS.simulator.simulator_test.test_3">
-<code class="descname">test_3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/simulator.html#simulator_test.test_3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.simulator.simulator_test.test_3" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="CFNS.simulator.simulator_test.test_without_interaction">
+<code class="descname">test_without_interaction</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CFNS/simulator.html#simulator_test.test_without_interaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#CFNS.simulator.simulator_test.test_without_interaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>상호작용이 없는 경우 잘 움직이는지 확인했습니다.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -259,7 +262,7 @@ simulator에서는 힘의 형태를 셋업해줄 수 있고 이를 기반으로 
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2019, Author
+        &copy; Copyright 2019, 구승연, 김경훈, 이승이
 
     </p>
   </div>

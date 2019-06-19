@@ -24,8 +24,8 @@ sys.path.insert(0, os.path.abspath('..'))
 sys.path.insert(0, os.path.abspath('../CFNS'))
 
 project = 'Central Force N-body Simulator in Python'
-copyright = '2019, Author'
-author = 'Author'
+copyright = '2019, 구승연, 김경훈, 이승이'
+author = '구승연, 김경훈, 이승이'
 
 autodoc_member_order = 'bysource'
 
