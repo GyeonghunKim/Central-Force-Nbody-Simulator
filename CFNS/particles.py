@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from data_types import location_series
+from CFNS.data_types import location_series
 import unittest
 
 # 입자 하나를 나타내는 클래스입니다. 앞에서 만든 location_series와 속도, 질량을 원소로 합니다.
@@ -155,7 +155,7 @@ class setup:
         #quiver함수로 각 입자의 위치와 속도를 표시합니다.
         fig_quiver, ax_quiver = plt.subplots()
         ax_quiver.quiver(x_pos, y_pos, x_direct, y_direct)#, scale = 0.1) #scale을 조정할 수 있습니다.
-        ax_quiver.axis([-10,10,-10,10]) #좌표평면에 나타나는 x축, y축 범위를 조정할 수 있습니다.
+        # ax_quiver.axis([-10,10,-10,10]) #좌표평면에 나타나는 x축, y축 범위를 조정할 수 있습니다.
         plt.show() #화면에 plot을 띄웁니다.
 
 class TestParticleSetup(unittest.TestCase): 

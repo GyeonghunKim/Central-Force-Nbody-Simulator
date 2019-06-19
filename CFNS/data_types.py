@@ -11,7 +11,8 @@ class vector_series:
         :param numpy array data: 초기 데이터입니다. 이 값의 차원과 위의 dim입력의 차원이 맞지 않으면 에러가 납니다.
         """
         self.dim = dim
-        if not data:
+        # print(data)
+        if len(data) == 0:
             self.data = [np.array([0 for x in range(self.dim)])]
         elif len(data) != dim:
             raise ValueError("initial value를 확인하세요!")

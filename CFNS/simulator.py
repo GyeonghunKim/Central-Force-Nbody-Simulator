@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from particles import setup
+from CFNS.particles import setup
 import re
 import unittest
 """ 궤도에 색 gradient를 넣을 때 사용합니다. 본 프로젝트의 범위(numpy and matplotlib)을 벗어나서 주석처리 했습니다. 
@@ -189,9 +189,10 @@ class simulator:
             for i in range(self.N_ptl):
                 x[i] = [d[0] for d in self.setup.particles[i].location.data] #각 입자의 시간에 따른 x좌표들을 저장합니다.
                 y[i] = [d[1] for d in self.setup.particles[i].location.data] #각 입자의 시간에 따른 y좌표들을 저장합니다.               
-                sc = ax.scatter(x[i],y[i]) 
-                cmap[i] = sc.get_facecolor() #각 입자에 색깔을 지정합니다. 
-                ax.scatter(x[i], y[i], c = cmap[i]) #각 입자의 시간에 따른 위치를 점으로 표시합니다.                
+                ax.scatter(x[i], y[i], label=str(i) + 'th particle') #각 입자의 시간에 따른 위치를 점으로 표시합니다.                
+            plt.xlabel('x (A.U.)')
+            plt.ylabel('y (A.U.)')
+            plt.legend()
             plt.show() #plot을 화면에 띄웁니다.
             
         #3차원인 벡터인 경우 #z좌표가 추가됩니다.
@@ -206,7 +207,7 @@ class simulator:
                 x[i] = [d[0] for d in self.setup.particles[i].location.data] 
                 y[i] = [d[1] for d in self.setup.particles[i].location.data] 
                 z[i] = [d[2] for d in self.setup.particles[i].location.data] 
-                sc = ax.scatter(x[i],y[i],z[i]) 
+                sc = ax.scatter(x[i],y[i],z[i], label=str(i) + 'th particle')
                 cmap[i] = sc.get_facecolor() 
             if projection: #3차원 공간으로 나타냅니다.
                 for i in range(self.N_ptl):
@@ -217,6 +218,10 @@ class simulator:
                     ax.scatter(xflat, y[i], z[i], c = cmap[i], alpha=0.01)
                     ax.scatter(x[i], yflat, z[i], c = cmap[i], alpha=0.01)
                     ax.scatter(x[i], y[i], zflat, c = cmap[i], alpha=0.01)
+            ax.set_xlabel('x (A.U.)')
+            ax.set_ylabel('y (A.U.)')
+            ax.set_zlabel('z (A.U.)')
+            plt.legend()
             plt.show() #plot을 화면에 띄웁니다.
 
 class simulator_test(unittest.TestCase):
