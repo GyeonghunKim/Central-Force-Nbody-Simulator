@@ -243,7 +243,7 @@ class simulator_test(unittest.TestCase):
                         "mass matrix is wrong parameter works wrong")
 
     def test_without_interaction(self):
-        """ 상호작용이 없는 경우 잘 움직이는지 확인했습니다.
+        """ 상호작용이 없는 경우 잘 움직이는지 확인했습니다. 이 경우에 가속도가 0이기 때문에 등속으로 각 물체가 직진할 것으로 예상됩니다.
         """
         table2 = setup(0.1, 3)
         table2.add_particle(10232, [1, 0, 0],  [0, 10, 0])
