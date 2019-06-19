@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Central Force N-Body Simulator
 중심력장으로 상호작용하는 다체 문제를 푸는 프로그램입니다. 
