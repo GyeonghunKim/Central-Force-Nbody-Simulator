@@ -3,8 +3,11 @@ import matplotlib.pyplot as plt
 from particles import setup
 import re
 import unittest
+""" 궤도에 색 gradient를 넣을 때 사용합니다. 본 프로젝트의 범위(numpy and matplotlib)을 벗어나서 주석처리 했습니다. 
 from cycler import cycler
+"""
 from mpl_toolkits.mplot3d import axes3d
+
 
 class simulator:
     '''
@@ -102,10 +105,10 @@ class simulator:
             # vel과 같은 shape을 각 입자의 위치에 append해 줍니다.
             self.setup.appendloc(loc)
 
-
+    """ cycler를 필요로 해서 주석 처리 했습니다. 
     def color_gradient(self):
-        """ 입자들의 움직임을 시간에 따라 다른 색깔을 가지는(그라데이션) 점으로 표시합니다.
-        """
+        ''' 입자들의 움직임을 시간에 따라 다른 색깔을 가지는(그라데이션) 점으로 표시합니다.
+        '''
         #2차원 벡터인 경우
         if self.setup.dim == 2:
             x_all = [] #각 벡터의 x좌표 변화만 모아놓을 list입니다. ex. x_all = [[1,2,3,4], [4,5,6,7], [7,8,9,10]]; 첫 번째 입자의 x좌표가 1,2,3,4으로 변화한 것입니다. 입자는 총 3개인 경우입니다.
@@ -170,10 +173,11 @@ class simulator:
                 for j in range(len(x_all[i])-1):
                     ax_gradient.plot(x_all[i][j:j+2],y_all[i][j:j+2],z_all[i][j:j+2])
             plt.show() #plot을 화면에 띄웁니다.
+        """
 
     def trajectory(self, projection = False):
-        """ 3차원 가시화를 위해서 사용합니다. 
-        :param bool projection: True일 경우 각 평면에 사영된 경로도 같이 출력합니다. defalult 는 False
+        """ 가시화를 위해서 사용합니다. 
+        :param bool projection: 3차원에서 True일 경우 각 평면에 사영된 경로도 같이 출력합니다. defalult 는 False
         """
         #2차원 벡터인 경우
         if self.setup.dim == 2:
